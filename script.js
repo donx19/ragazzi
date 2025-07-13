@@ -79,11 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const floatingElements = document.getElementById('floating-elements');
     const desktopMenuNavLinks = document.querySelectorAll('.menu-nav-links.desktop-nav a');
     
-    // New Mobile Dropdown Elements
-    const menuCategorySelector = document.querySelector('.menu-category-selector');
-    const categorySelectorBtn = document.querySelector('.category-selector-btn');
-    const categoryDropdown = document.querySelector('.category-dropdown');
-    const categoryDropdownLinks = document.querySelectorAll('.category-dropdown a');
+    // New Mobile Scroller Elements
+    const categoryChips = document.querySelectorAll('.category-chip');
 
 
     // --- LANGUAGE & TRANSLATION ---
@@ -105,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.lang = lang;
             
             renderCurrentMenuItem();
-            updateCategoryButtonText();
 
             const selectedLangAnchor = langDropdown.querySelector(`[data-lang-code="${lang}"]`);
             if (selectedLangAnchor) {
@@ -242,10 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Update both desktop and mobile navs
         desktopMenuNavLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
-        categoryDropdownLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
+        categoryChips.forEach(chip => chip.classList.toggle('active', chip.dataset.menu === activeMenuKey));
         
-        updateCategoryButtonText();
-
         pizzaDisplay.classList.add('is-navigating');
         setTimeout(() => {
             renderCurrentMenuItem();
@@ -258,14 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseText = translations[currentLang]?.[orderNowKey] || 'Order Now';
         
         orderNowBtn.textContent = activeMenuKey === 'PIZZA' ? `${baseText} (${selectedSize})` : baseText;
-    }
-
-    function updateCategoryButtonText() {
-        if (!categorySelectorBtn) return;
-        const activeLink = document.querySelector(`.category-dropdown a[data-menu="${activeMenuKey}"]`);
-        if (activeLink) {
-            categorySelectorBtn.querySelector('span').textContent = activeLink.textContent;
-        }
     }
 
     function showPhoneModal() {
@@ -297,7 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (menuTarget && itemTargetName) {
                     const targetMenu = menuData[menuTarget];
-                    // Find the nameKey in English first to get a stable reference
                     const itemTargetNameKey = Object.keys(translations.en).find(key => translations.en[key] === itemTargetName);
                     
                     const itemIndex = targetMenu.items.findIndex(item => item.nameKey === itemTargetNameKey);
@@ -306,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         switchPage('menu-page');
                         activeMenuKey = menuTarget;
                         currentItemIndex = itemIndex;
-                        // Defer the category switch slightly to allow page transition
                         setTimeout(() => switchMenuCategory(menuTarget), 50);
                     }
                 }
@@ -356,28 +340,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Listener for mobile category dropdown button
-        if (categorySelectorBtn) {
-            categorySelectorBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                menuCategorySelector.classList.toggle('open');
-            });
-        }
-        
-        // Listener for links inside the mobile dropdown
-        categoryDropdownLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
+        // Listener for mobile category scroller chips
+        categoryChips.forEach(chip => {
+            chip.addEventListener('click', (e) => {
                 e.preventDefault();
-                menuCategorySelector.classList.remove('open');
-                switchMenuCategory(link.dataset.menu);
+                switchMenuCategory(chip.dataset.menu);
+                // Optional: scroll the active chip into view
+                chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             });
         });
-        
-        // Global listener to close dropdowns
-        document.addEventListener('click', () => {
-            if (menuCategorySelector) menuCategorySelector.classList.remove('open');
-        });
-
 
         sizeSelector.addEventListener('click', (e) => {
             const target = e.target.closest('.size-option');
