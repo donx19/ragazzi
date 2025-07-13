@@ -128,8 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         window.scrollTo(0, 0);
-        if(mainNav.classList.contains('mobile-active')) {
+        // If mobile nav is open, close it when switching pages
+        if (document.body.classList.contains('mobile-nav-open')) {
             mainNav.classList.remove('mobile-active');
+            document.body.classList.remove('mobile-nav-open');
+            mobileNavToggle.querySelector('i').className = 'fas fa-bars';
         }
     }
     
@@ -238,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Update both desktop and mobile navs
         desktopMenuNavLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
-        categoryChips.forEach(chip => chip.classList.toggle('active', chip.dataset.menu === activeMenuKey));
+        categoryChips.forEach(chip => chip.classList.toggle('active', chip.dataset.menu === newMenuKey));
         
         pizzaDisplay.classList.add('is-navigating');
         setTimeout(() => {
@@ -264,8 +267,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS ---
     function setupEventListeners() {
+        // REVISED Mobile Nav Toggle
         mobileNavToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('mobile-active');
+            const icon = mobileNavToggle.querySelector('i');
+            const isNavOpen = mainNav.classList.toggle('mobile-active');
+            document.body.classList.toggle('mobile-nav-open', isNavOpen);
+            // Swap icon class
+            if (isNavOpen) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
         });
 
         mainNavLinks.forEach(link => {
