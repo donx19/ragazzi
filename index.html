@@ -38,7 +38,6 @@
     </header>
 
     <main>
-        <!-- HOME PAGE -->
         <section id="home-page" class="page active">
             <div class="hero">
                 <div class="hero-content">
@@ -84,10 +83,9 @@
 
         </section>
 
-        <!-- MENU PAGE -->
         <section id="menu-page" class="page">
              <div id="menu-page-container">
-                <nav class="menu-nav-links">
+                <nav class="menu-nav-links desktop-nav">
                     <a href="#" class="active" data-menu="PIZZA" data-lang="menu_cat_pizza">PIZZA</a>
                     <a href="#" data-menu="BAGUETTE" data-lang="menu_cat_baguette">BAGUETTE</a>
                     <a href="#" data-menu="PIDE" data-lang="menu_cat_pide">PIDE</a>
@@ -98,6 +96,25 @@
                     <a href="#" data-menu="PIZZA FOR KIDS" data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</a>
                     <a href="#" data-menu="EXTRAS" data-lang="menu_cat_extras">EXTRAS</a>
                 </nav>
+                
+                <div class="menu-category-selector mobile-nav">
+                    <button class="category-selector-btn">
+                        <span data-lang="menu_cat_pizza">PIZZA</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="category-dropdown">
+                        <a href="#" class="active" data-menu="PIZZA" data-lang="menu_cat_pizza">PIZZA</a>
+                        <a href="#" data-menu="BAGUETTE" data-lang="menu_cat_baguette">BAGUETTE</a>
+                        <a href="#" data-menu="PIDE" data-lang="menu_cat_pide">PIDE</a>
+                        <a href="#" data-menu="PORTION" data-lang="menu_cat_portion">PORTION</a>
+                        <a href="#" data-menu="TOSTA" data-lang="menu_cat_tosta">TOAST</a>
+                        <a href="#" data-menu="BURGER" data-lang="menu_cat_burger">BURGER</a>
+                        <a href="#" data-menu="LAHMAXHUN" data-lang="menu_cat_lahmacun">LAHMAJUN</a>
+                        <a href="#" data-menu="PIZZA FOR KIDS" data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</a>
+                        <a href="#" data-menu="EXTRAS" data-lang="menu_cat_extras">EXTRAS</a>
+                    </div>
+                </div>
+
                 <div class="container">
                     <h1 id="menu-title">Pick Your Pizza</h1>
                     <div class="pizza-display">
@@ -126,7 +143,6 @@
             </div>
         </section>
 
-        <!-- ABOUT US PAGE -->
         <section id="about-page" class="page">
             <div class="about-page">
                 <div class="container">
@@ -166,7 +182,7 @@
 
     <div id="phone-modal" class="phone-modal">
         <div class="phone-modal-content">
-            <span class="close-modal">&times;</span>
+            <span class="close-modal">×</span>
             <h3 data-lang="modalTitle">Call or Message Us</h3>
             <p data-lang="modalSubtitle">Please choose an option below:</p>
             <a href="tel:+38970421428" class="phone-number"><i class="fas fa-phone"></i> <span data-lang="callUs">Call Us</span></a>
@@ -198,7 +214,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 RAGAZZI FASTFOOD & PIZZA. All rights reserved.</p>
+                <p>© 2025 RAGAZZI FASTFOOD & PIZZA. All rights reserved.</p>
             </div>
         </div>
     </footer>
