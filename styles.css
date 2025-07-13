@@ -34,6 +34,11 @@ body {
     overflow-x: hidden;
 }
 
+/* New style to prevent scrolling when mobile nav is open */
+body.mobile-nav-open {
+    overflow: hidden;
+}
+
 .container {
     width: 90%;
     max-width: 1200px;
@@ -215,6 +220,11 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     z-index: 1001;
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav-toggle:hover {
+    transform: scale(1.1);
 }
 
 /* Hero Section (Home Page) */
@@ -516,7 +526,7 @@ body {
 .footer-section h3 { color: var(--accent-color); font-size: 1.4rem; margin-bottom: 1.5rem; font-weight: 600; }
 .footer-section p { color: #ccc; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; line-height: 1.7; }
 .footer-section p i { color: var(--accent-color); width: 20px; text-align: center; }
-.footer-section p a { color: #ccc; text-decoration: none; transition: var(--transition); }
+.footer-section p a { color: #ccc; text-decoration: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.75rem; }
 .footer-section a:hover { color: var(--accent-color); }
 .social-links { display: flex; gap: 1rem; }
 .social-links a { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: #fff; font-size: 1.3rem; transition: all 0.3s ease; }
@@ -555,38 +565,64 @@ body {
     .header .container {
         position: relative;
     }
+
+    /* REVISED Mobile Navigation Overlay */
     .main-nav {
-        display: none;
+        display: flex;
         flex-direction: column;
-        position: fixed; /* Use fixed to cover the whole screen */
+        align-items: center;      /* Center items horizontally */
+        justify-content: center;  /* Center items vertically */
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(20, 20, 20, 0.98);
-        backdrop-filter: blur(5px);
-        padding: 6rem 1rem 2rem;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
+        backdrop-filter: blur(8px);
+        padding: 2rem;
+        gap: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+        z-index: 1000;
     }
     .main-nav.mobile-active {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
     .main-nav a {
         margin: 0;
-        font-size: 1.5rem;
+        font-size: 1.8rem; /* Adjusted font size */
+        font-weight: 600;
+        color: var(--white);
+        padding: 0.75rem;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .main-nav a:hover {
+        transform: scale(1.1);
+        color: var(--accent-color);
     }
     .language-switcher {
-        margin: 1.5rem 0 0 0;
+        margin-top: 2rem;
+        margin-left: 0;
     }
-    .lang-dropdown {
+     .lang-dropdown {
         right: 50%;
         transform: translateX(50%);
-        top: 110%;
+        background: #333;
     }
+     .lang-dropdown a {
+        color: #fff;
+     }
+     .lang-dropdown a:hover {
+        background-color: #444;
+    }
+
     .mobile-nav-toggle {
         display: block;
+        z-index: 1001; /* Ensure it's above the overlay */
     }
 
     .hero-content h1 { font-size: 2.8rem; }
@@ -596,8 +632,8 @@ body {
         padding-top: 70px;
     }
     
-    /* NEW MOBILE CATEGORY SCROLLER STYLES */
-    .menu-nav-links.desktop-nav { display: none; } /* Hide desktop nav */
+    /* MOBILE CATEGORY SCROLLER STYLES */
+    .menu-nav-links.desktop-nav { display: none; }
     .category-scroller-container.mobile-nav {
         display: block;
         padding: 0.5rem 0;
@@ -677,19 +713,20 @@ body {
         font-size: 1rem;
     }
 
-    /* FOOTER MOBILE FIXES */
+    /* REVISED Footer Mobile Alignment */
     .footer-content {
         grid-template-columns: 1fr;
-        text-align: center;
+        text-align: left; /* Align all text to the left */
         gap: 2.5rem;
     }
     .footer-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        /* Removed flex properties to allow natural block layout */
     }
     .footer-section p {
-        justify-content: center;
+        justify-content: flex-start; /* Align icon+text groups to the left */
+    }
+    .social-links {
+        justify-content: flex-start; /* Align social icons to the left */
     }
 }
 
