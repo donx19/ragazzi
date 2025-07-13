@@ -103,7 +103,7 @@ body.mobile-nav-open {
     text-transform: uppercase;
     letter-spacing: 1px;
     line-height: 1.2;
-    z-index: 1001; /* Keep logo z-index relative to header */
+    z-index: 1001;
 }
 
 .logo span {
@@ -219,7 +219,7 @@ body.mobile-nav-open {
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    z-index: 1001; /* Keep toggle z-index relative to header */
+    z-index: 1001; 
     transition: transform 0.3s ease;
 }
 
@@ -562,20 +562,20 @@ body.mobile-nav-open {
 
 /* Small Devices (Phones, up to 768px) */
 @media (max-width: 768px) {
-    /* REVISED Z-INDEX STACKING CONTEXT */
+    /* Set stacking context for the header elements */
     .header {
         z-index: 1010;
     }
     .logo, .mobile-nav-toggle {
-        z-index: 1012; /* Ensure logo and toggle are on top of the overlay */
+        z-index: 1012;
     }
 
-    /* REVISED Mobile Navigation Overlay */
+    /* Professional Mobile Navigation Overlay */
     .main-nav {
         display: flex;
         flex-direction: column;
-        align-items: center;      /* Center items horizontally */
-        justify-content: center;  /* Center items vertically */
+        align-items: center;
+        justify-content: center;
         position: fixed;
         top: 0;
         left: 0;
@@ -588,7 +588,7 @@ body.mobile-nav-open {
         visibility: hidden;
         transform: scale(1.1);
         transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-        z-index: 1011; /* Set z-index higher than header, but lower than toggle/logo */
+        z-index: 1011; /* Z-index must be higher than header but lower than toggle */
     }
     .main-nav.mobile-active {
         opacity: 1;
@@ -611,15 +611,15 @@ body.mobile-nav-open {
         margin-top: 2rem;
         margin-left: 0;
     }
-    .lang-dropdown {
+     .lang-dropdown {
         right: 50%;
         transform: translateX(50%);
         background: #333;
     }
-    .lang-dropdown a {
+     .lang-dropdown a {
         color: #fff;
-    }
-    .lang-dropdown a:hover {
+     }
+     .lang-dropdown a:hover {
         background-color: #444;
     }
 
@@ -720,6 +720,9 @@ body.mobile-nav-open {
         grid-template-columns: 1fr;
         text-align: left; /* Align all text to the left */
         gap: 2.5rem;
+    }
+    .footer-section {
+        /* No special alignment needed, defaults to left */
     }
     .footer-section p {
         justify-content: flex-start; /* Align icon+text groups to the left */
