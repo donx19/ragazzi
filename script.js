@@ -20,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- DATA ---
-    // NOTE: In a real application, this data would also be loaded from a file or an API.
-    // For this example, it's embedded as provided.
     function initializeData() {
         menuData = {
             "PIZZA": { titleKey: 'menu_pizza', items: [ { nameKey: 'pizza_margarita_name', descriptionKey: 'pizza_margarita_desc', ingredientsKey: 'pizza_margarita_ingredients' }, { nameKey: 'pizza_funghi_name', descriptionKey: 'pizza_funghi_desc', ingredientsKey: 'pizza_funghi_ingredients' }, { nameKey: 'pizza_tuna_name', descriptionKey: 'pizza_tuna_desc', ingredientsKey: 'pizza_tuna_ingredients' }, { nameKey: 'pizza_suxhuk_name', descriptionKey: 'pizza_suxhuk_desc', ingredientsKey: 'pizza_suxhuk_ingredients' }, { nameKey: 'pizza_prosciutto_name', descriptionKey: 'pizza_prosciutto_desc', ingredientsKey: 'pizza_prosciutto_ingredients' }, { nameKey: 'pizza_capricciosa_name', descriptionKey: 'pizza_capricciosa_desc', ingredientsKey: 'pizza_capricciosa_ingredients' }, { nameKey: 'pizza_quattro_formaggi_name', descriptionKey: 'pizza_quattro_formaggi_desc', ingredientsKey: 'pizza_quattro_formaggi_ingredients' }, { nameKey: 'pizza_calzone_name', descriptionKey: 'pizza_calzone_desc', ingredientsKey: 'pizza_calzone_ingredients' }, { nameKey: 'pizza_vegetarian_name', descriptionKey: 'pizza_vegetarian_desc', ingredientsKey: 'pizza_vegetarian_ingredients' }, { nameKey: 'pizza_durum_name', descriptionKey: 'pizza_durum_desc', ingredientsKey: 'pizza_durum_ingredients' }, { nameKey: 'pizza_ragazzi_name', descriptionKey: 'pizza_ragazzi_desc', ingredientsKey: 'pizza_ragazzi_ingredients' } ] },
@@ -79,7 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneModal = document.getElementById('phone-modal');
     const closeModalBtn = document.querySelector('.close-modal');
     const floatingElements = document.getElementById('floating-elements');
-    const menuNavLinks = document.querySelectorAll('.menu-nav-links a');
+    const desktopMenuNavLinks = document.querySelectorAll('.menu-nav-links.desktop-nav a');
+    
+    // New Mobile Dropdown Elements
+    const menuCategorySelector = document.querySelector('.menu-category-selector');
+    const categorySelectorBtn = document.querySelector('.category-selector-btn');
+    const categoryDropdown = document.querySelector('.category-dropdown');
+    const categoryDropdownLinks = document.querySelectorAll('.category-dropdown a');
+
 
     // --- LANGUAGE & TRANSLATION ---
     function setLanguage(lang) {
@@ -100,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.lang = lang;
             
             renderCurrentMenuItem();
+            updateCategoryButtonText();
 
             const selectedLangAnchor = langDropdown.querySelector(`[data-lang-code="${lang}"]`);
             if (selectedLangAnchor) {
@@ -179,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const item = menu.items[currentItemIndex];
         const cardInfo = menuCardData[activeMenuKey]?.items[currentItemIndex];
-
         const t = translations[currentLang];
         
         menuTitleEl.textContent = t[menu.titleKey] || activeMenuKey;
@@ -235,9 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
         activeMenuKey = newMenuKey;
         currentItemIndex = 0;
         
-        menuNavLinks.forEach(link => {
-            link.classList.toggle('active', link.dataset.menu === activeMenuKey);
-        });
+        // Update both desktop and mobile navs
+        desktopMenuNavLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
+        categoryDropdownLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
+        
+        updateCategoryButtonText();
 
         pizzaDisplay.classList.add('is-navigating');
         setTimeout(() => {
@@ -249,9 +256,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateOrderButtonText() {
         const orderNowKey = 'orderNow';
         const baseText = translations[currentLang]?.[orderNowKey] || 'Order Now';
-        const price = menuData[activeMenuKey]?.items[currentItemIndex]?.price || '';
         
         orderNowBtn.textContent = activeMenuKey === 'PIZZA' ? `${baseText} (${selectedSize})` : baseText;
+    }
+
+    function updateCategoryButtonText() {
+        if (!categorySelectorBtn) return;
+        const activeLink = document.querySelector(`.category-dropdown a[data-menu="${activeMenuKey}"]`);
+        if (activeLink) {
+            categorySelectorBtn.querySelector('span').textContent = activeLink.textContent;
+        }
     }
 
     function showPhoneModal() {
@@ -279,18 +293,21 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const menuTarget = link.dataset.menuTarget;
-                const itemTargetNameKey = translations['en'][link.dataset.itemTarget]; // Find nameKey from English
+                const itemTargetName = link.dataset.itemTarget;
                 
-                if (menuTarget && itemTargetNameKey) {
+                if (menuTarget && itemTargetName) {
                     const targetMenu = menuData[menuTarget];
-                    const itemIndex = targetMenu.items.findIndex(item => translations['en'][item.nameKey] === itemTargetNameKey);
+                    // Find the nameKey in English first to get a stable reference
+                    const itemTargetNameKey = Object.keys(translations.en).find(key => translations.en[key] === itemTargetName);
+                    
+                    const itemIndex = targetMenu.items.findIndex(item => item.nameKey === itemTargetNameKey);
 
                     if (itemIndex !== -1) {
+                        switchPage('menu-page');
                         activeMenuKey = menuTarget;
                         currentItemIndex = itemIndex;
-                        menuNavLinks.forEach(navLink => navLink.classList.toggle('active', navLink.dataset.menu === activeMenuKey));
-                        switchPage('menu-page');
-                        renderCurrentMenuItem();
+                        // Defer the category switch slightly to allow page transition
+                        setTimeout(() => switchMenuCategory(menuTarget), 50);
                     }
                 }
             });
@@ -331,12 +348,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        menuNavLinks.forEach(link => {
+        // Listener for desktop nav
+        desktopMenuNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 switchMenuCategory(link.dataset.menu);
             });
         });
+        
+        // Listener for mobile category dropdown button
+        if (categorySelectorBtn) {
+            categorySelectorBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuCategorySelector.classList.toggle('open');
+            });
+        }
+        
+        // Listener for links inside the mobile dropdown
+        categoryDropdownLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                menuCategorySelector.classList.remove('open');
+                switchMenuCategory(link.dataset.menu);
+            });
+        });
+        
+        // Global listener to close dropdowns
+        document.addEventListener('click', () => {
+            if (menuCategorySelector) menuCategorySelector.classList.remove('open');
+        });
+
 
         sizeSelector.addEventListener('click', (e) => {
             const target = e.target.closest('.size-option');
