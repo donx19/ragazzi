@@ -103,7 +103,7 @@ body.mobile-nav-open {
     text-transform: uppercase;
     letter-spacing: 1px;
     line-height: 1.2;
-    z-index: 1001;
+    z-index: 1001; /* Keep logo z-index relative to header */
 }
 
 .logo span {
@@ -219,7 +219,7 @@ body.mobile-nav-open {
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1001; /* Keep toggle z-index relative to header */
     transition: transform 0.3s ease;
 }
 
@@ -562,8 +562,12 @@ body.mobile-nav-open {
 
 /* Small Devices (Phones, up to 768px) */
 @media (max-width: 768px) {
-    .header .container {
-        position: relative;
+    /* REVISED Z-INDEX STACKING CONTEXT */
+    .header {
+        z-index: 1010;
+    }
+    .logo, .mobile-nav-toggle {
+        z-index: 1012; /* Ensure logo and toggle are on top of the overlay */
     }
 
     /* REVISED Mobile Navigation Overlay */
@@ -577,27 +581,26 @@ body.mobile-nav-open {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(20, 20, 20, 0.98);
-        backdrop-filter: blur(8px);
+        background-color: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(10px);
         padding: 2rem;
-        gap: 1rem;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-20px);
+        transform: scale(1.1);
         transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-        z-index: 1000;
+        z-index: 1011; /* Set z-index higher than header, but lower than toggle/logo */
     }
     .main-nav.mobile-active {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: scale(1);
     }
     .main-nav a {
         margin: 0;
-        font-size: 1.8rem; /* Adjusted font size */
+        font-size: 1.8rem;
         font-weight: 600;
         color: var(--white);
-        padding: 0.75rem;
+        padding: 1rem;
         transition: color 0.3s ease, transform 0.3s ease;
     }
     .main-nav a:hover {
@@ -608,21 +611,20 @@ body.mobile-nav-open {
         margin-top: 2rem;
         margin-left: 0;
     }
-     .lang-dropdown {
+    .lang-dropdown {
         right: 50%;
         transform: translateX(50%);
         background: #333;
     }
-     .lang-dropdown a {
+    .lang-dropdown a {
         color: #fff;
-     }
-     .lang-dropdown a:hover {
+    }
+    .lang-dropdown a:hover {
         background-color: #444;
     }
 
     .mobile-nav-toggle {
         display: block;
-        z-index: 1001; /* Ensure it's above the overlay */
     }
 
     .hero-content h1 { font-size: 2.8rem; }
@@ -718,9 +720,6 @@ body.mobile-nav-open {
         grid-template-columns: 1fr;
         text-align: left; /* Align all text to the left */
         gap: 2.5rem;
-    }
-    .footer-section {
-        /* Removed flex properties to allow natural block layout */
     }
     .footer-section p {
         justify-content: flex-start; /* Align icon+text groups to the left */
