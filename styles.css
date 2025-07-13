@@ -1,416 +1,732 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- TRANSLATIONS (Loaded from external JSON files) ---
-    let translations = {};
-    let menuData = {};
-    let menuCardData = {};
-    let currentLang = 'en'; // Default language
+/* Global Styles */
+:root {
+    --primary-color: #2EAD56;
+    --secondary-color: #1A6331;
+    --accent-color: #FFD700;
+    --text-color: #333333;
+    --light-bg: #f9f9f9;
+    --white: #ffffff;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s ease;
+    --bg-gradient: linear-gradient(135deg, #e74c3c, #c0392b);
+}
 
-    async function loadTranslations() {
-        try {
-            const [en, sq, mk, tr] = await Promise.all([
-                fetch('en.json').then(res => res.json()),
-                fetch('sq.json').then(res => res.json()),
-                fetch('mk.json').then(res => res.json()),
-                fetch('tr.json').then(res => res.json())
-            ]);
-            translations = { en, sq, mk, tr };
-        } catch (error) {
-            console.error("Could not load translation files:", error);
-        }
+html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color, #333);
+    background: var(--white);
+    min-height: 100vh;
+    transition: background 0.5s ease, color 0.3s ease;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Page Transitions */
+.page {
+    display: none;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Language Transition */
+[data-lang], #pizza-name, #pizza-description, #menu-title {
+    transition: opacity 0.3s ease;
+}
+.lang-switching [data-lang],
+.lang-switching #pizza-name,
+.lang-switching #pizza-description,
+.lang-switching #menu-title {
+    opacity: 0;
+}
+
+
+/* Header Styles */
+.header {
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.header.scrolled {
+    padding: 0.5rem 0;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    z-index: 1001;
+}
+
+.logo span {
+    font-size: 0.9rem;
+    display: block;
+    color: var(--accent-color);
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+}
+
+.main-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 2rem;
+    font-size: 1rem;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+/* Language Switcher Styles */
+.language-switcher {
+    position: relative;
+    font-size: 1rem;
+    z-index: 1001;
+    margin-left: 2rem;
+}
+
+.selected-lang {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.selected-lang:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.selected-lang img {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+}
+
+.selected-lang span {
+    color: var(--white);
+    font-weight: 500;
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+    width: max-content;
+    min-width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.language-switcher.open .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-dropdown a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.lang-dropdown a:hover {
+    background-color: var(--light-bg);
+}
+
+.lang-dropdown img {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+    border-radius: 50%;
+}
+
+.mobile-nav-toggle {
+    display: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Hero Section (Home Page) */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://i.imgur.com/uN6iuxA.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+}
+
+.hero-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: var(--text-color);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+/* Featured Items Section */
+.featured-items {
+    padding: 5rem 0;
+    background: var(--light-bg);
+}
+
+.featured-items h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--text-color);
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.item-card {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.item-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.item-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.item-card h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--text-color);
+}
+
+.item-card p {
+    padding: 0 1.5rem 1.5rem;
+    color: #666;
+}
+
+/* About Preview Section */
+.about-preview {
+    padding: 5rem 0;
+    background: #222;
+    color: var(--white);
+    text-align: center;
+}
+
+.about-preview-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-preview-content p {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.8;
+    color: #ccc;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-color);
+    color: var(--text-color);
+    transform: translateY(-3px);
+}
+.btn-secondary:active {
+    transform: translateY(-1px);
+}
+
+/* Menu Page Styles */
+#menu-page-container {
+    padding-top: 80px; /* Header Height */
+    background: var(--bg-gradient);
+    transition: background 0.5s ease;
+    min-height: 100vh;
+    padding-bottom: 4rem;
+}
+.menu-nav-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    padding: 1rem;
+}
+.menu-nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+.menu-nav-links a:hover,
+.menu-nav-links a.active {
+    color: #000;
+    background: var(--accent-color);
+}
+#menu-title {
+    text-align: center;
+    color: #fff;
+    margin: 2rem 0;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 0 1rem;
+}
+#floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.floating-emoji {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0;
+    animation: floatUp 15s linear infinite;
+    z-index: -1;
+    will-change: transform;
+}
+@keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.1; }
+    90% { opacity: 0.1; }
+    100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+}
+
+.pizza-display {
+    text-align: center;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.size-selector-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+}
+.size-option {
+    width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); color: white; font-weight: bold; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255, 255, 255, 0.2); font-size: 1.1rem;
+}
+.size-option:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
+.size-option.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); transform: scale(1.1); }
+.size-option:active { transform: scale(1.05); }
+
+.pizza-content { display: flex; flex-direction: column; align-items: center; gap: 1rem; flex-grow: 1; }
+
+.pizza-image-container, .pizza-info, .ingredients {
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.pizza-display.is-navigating .pizza-image-container,
+.pizza-display.is-navigating .pizza-info,
+.pizza-display.is-navigating .ingredients {
+    opacity: 0;
+    transform: translateY(30px);
+}
+.pizza-display.is-navigating .pizza-image-container {
+     transform: scale(0.7);
+}
+
+.pizza-image-container { width: 100%; max-width: 400px; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; }
+#pizza-image { width: 90%; height: 90%; object-fit: contain; }
+.pizza-info { text-align: center; max-width: 600px; }
+#pizza-name { font-size: 2.2rem; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+.pizza-description { font-size: 1.1rem; color: #eee; margin-bottom: 1rem; line-height: 1.6; padding: 0 1rem; }
+.ingredients { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0 1rem; }
+.ingredients span { background: rgba(255, 255, 255, 0.1); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem; color: #fff; backdrop-filter: blur(5px); }
+
+.pizza-navigation { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 450px; margin: 0 auto; }
+.nav-btn { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; padding: 0; flex-shrink: 0; }
+.nav-btn:hover { background: rgba(255, 215, 0, 0.2); transform: translateY(-2px); }
+.nav-btn:active { transform: scale(0.9); transition-duration: 0.1s; }
+.order-now-btn { background: var(--accent-color, #FFD700); color: #000; border: none; padding: 0.8rem 2rem; font-size: 1.1rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); white-space: nowrap; }
+.order-now-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
+.order-now-btn:active { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+
+.phone-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
+.phone-modal.show { display: flex; opacity: 1; }
+.phone-modal-content { background: white; padding: 2.5rem; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transform: scale(0.9); transition: transform 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.phone-modal.show .phone-modal-content { transform: scale(1); }
+.close-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.8rem; cursor: pointer; color: #666; transition: color 0.3s ease; }
+.close-modal:hover { color: #000; }
+.phone-modal-content a { display: inline-flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 12px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: transform 0.2s ease, background-color 0.2s ease; border: none; cursor: pointer; width: 90%; max-width: 280px; }
+.phone-number { background-color: #555; color: white; }
+.whatsapp-btn { background-color: #25D366; color: white; }
+.phone-modal-content a:hover { transform: translateY(-2px); }
+.phone-modal-content a:active { transform: translateY(0); }
+.opening-hours { margin-top: 1rem; font-size: 0.9rem; color: #666; }
+
+/* About Us Page */
+.about-page { padding-top: 80px; padding-bottom: 5rem; background: var(--white); }
+.about-section { margin-bottom: 4rem; }
+.about-section h1, .about-section h2 { text-align: center; margin-bottom: 2rem; font-family: 'Playfair Display', serif; }
+.about-section h1 { font-size: 3rem; color: var(--text-color); }
+.about-section h2 { font-size: 2.5rem; color: var(--text-color); }
+.about-hero-image { width: 100%; height: auto; border-radius: 15px; margin-bottom: 3rem; box-shadow: var(--shadow); }
+.about-text { max-width: 800px; margin: 0 auto; text-align: center; }
+.about-text p { margin-bottom: 1.5rem; line-height: 1.8; color: #555; }
+.pizzaiolo-section { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.pizzaiolo-section img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; border: 5px solid var(--white); box-shadow: var(--shadow); }
+.pizzaiolo-section h3 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--text-color); }
+.pizzaiolo-section .title { font-size: 1.1rem; color: var(--primary-color); font-weight: 600; margin-bottom: 1rem; }
+.pizzaiolo-section p { max-width: 700px; line-height: 1.8; color: #555; }
+.community-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.community-gallery img { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; box-shadow: var(--shadow); transition: var(--transition); }
+.community-gallery img:hover { transform: scale(1.05); box-shadow: var(--shadow-hover); }
+
+/* Footer */
+.footer { background: #1a1a1a; color: #fff; padding: 4rem 0 2rem; position: relative; }
+.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; }
+.footer-section h3 { color: var(--accent-color); font-size: 1.4rem; margin-bottom: 1.5rem; font-weight: 600; }
+.footer-section p { color: #ccc; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; line-height: 1.7; }
+.footer-section p i { color: var(--accent-color); width: 20px; text-align: center; }
+.footer-section p a { color: #ccc; text-decoration: none; transition: var(--transition); }
+.footer-section a:hover { color: var(--accent-color); }
+.social-links { display: flex; gap: 1rem; }
+.social-links a { display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: #fff; font-size: 1.3rem; transition: all 0.3s ease; }
+.social-links a:hover { background: var(--accent-color); color: #000; transform: translateY(-3px); }
+.footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9rem; color: #888; }
+
+/* ------------------- */
+/* Responsive Design */
+/* ------------------- */
+
+/* Default state for menu navs */
+.menu-nav-links.desktop-nav { display: flex; }
+.menu-category-selector.mobile-nav { display: none; }
+
+
+/* Medium Devices (Tablets, up to 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        width: 95%;
+    }
+    .hero-content h1 {
+        font-size: 3.5rem;
+    }
+    .pizza-display {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+    .size-selector-vertical {
+        flex-direction: row;
+    }
+}
+
+/* Small Devices (Phones, up to 768px) */
+@media (max-width: 768px) {
+    .header .container {
+        position: relative;
+    }
+    .main-nav {
+        display: none;
+        flex-direction: column;
+        position: fixed; /* Use fixed to cover the whole screen */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(20, 20, 20, 0.98);
+        backdrop-filter: blur(5px);
+        padding: 6rem 1rem 2rem;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    .main-nav.mobile-active {
+        display: flex;
+    }
+    .main-nav a {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+    .language-switcher {
+        margin: 1.5rem 0 0 0;
+    }
+    .lang-dropdown {
+        right: 50%;
+        transform: translateX(50%);
+        top: 110%;
+    }
+    .mobile-nav-toggle {
+        display: block;
+    }
+
+    .hero-content h1 { font-size: 2.8rem; }
+    .hero-content p { font-size: 1.1rem; padding: 0 1rem; }
+
+    #menu-page-container { 
+        padding-top: 70px;
     }
     
-    // --- DATA ---
-    function initializeData() {
-        menuData = {
-            "PIZZA": { titleKey: 'menu_pizza', items: [ { nameKey: 'pizza_margarita_name', descriptionKey: 'pizza_margarita_desc', ingredientsKey: 'pizza_margarita_ingredients' }, { nameKey: 'pizza_funghi_name', descriptionKey: 'pizza_funghi_desc', ingredientsKey: 'pizza_funghi_ingredients' }, { nameKey: 'pizza_tuna_name', descriptionKey: 'pizza_tuna_desc', ingredientsKey: 'pizza_tuna_ingredients' }, { nameKey: 'pizza_suxhuk_name', descriptionKey: 'pizza_suxhuk_desc', ingredientsKey: 'pizza_suxhuk_ingredients' }, { nameKey: 'pizza_prosciutto_name', descriptionKey: 'pizza_prosciutto_desc', ingredientsKey: 'pizza_prosciutto_ingredients' }, { nameKey: 'pizza_capricciosa_name', descriptionKey: 'pizza_capricciosa_desc', ingredientsKey: 'pizza_capricciosa_ingredients' }, { nameKey: 'pizza_quattro_formaggi_name', descriptionKey: 'pizza_quattro_formaggi_desc', ingredientsKey: 'pizza_quattro_formaggi_ingredients' }, { nameKey: 'pizza_calzone_name', descriptionKey: 'pizza_calzone_desc', ingredientsKey: 'pizza_calzone_ingredients' }, { nameKey: 'pizza_vegetarian_name', descriptionKey: 'pizza_vegetarian_desc', ingredientsKey: 'pizza_vegetarian_ingredients' }, { nameKey: 'pizza_durum_name', descriptionKey: 'pizza_durum_desc', ingredientsKey: 'pizza_durum_ingredients' }, { nameKey: 'pizza_ragazzi_name', descriptionKey: 'pizza_ragazzi_desc', ingredientsKey: 'pizza_ragazzi_ingredients' } ] },
-            "BAGUETTE": { titleKey: 'menu_baguette', items: [ { nameKey: 'baguette_chicken_name', descriptionKey: 'baguette_chicken_desc', ingredientsKey: 'baguette_chicken_ingredients' }, { nameKey: 'baguette_adana_name', descriptionKey: 'baguette_adana_desc', ingredientsKey: 'baguette_adana_ingredients' }, { nameKey: 'baguette_suxhuk_name', descriptionKey: 'baguette_suxhuk_desc', ingredientsKey: 'baguette_suxhuk_ingredients' }, { nameKey: 'baguette_pleskavic_name', descriptionKey: 'baguette_pleskavic_desc', ingredientsKey: 'baguette_pleskavic_ingredients' } ] },
-            "PIDE": { titleKey: 'menu_pide', items: [ { nameKey: 'pide_kackavall_name', descriptionKey: 'pide_kackavall_desc', ingredientsKey: 'pide_kackavall_ingredients' }, { nameKey: 'pide_suxhuk_name', descriptionKey: 'pide_suxhuk_desc', ingredientsKey: 'pide_suxhuk_ingredients' }, { nameKey: 'pide_mish_bluar_name', descriptionKey: 'pide_mish_bluar_desc', ingredientsKey: 'pide_mish_bluar_ingredients' }, { nameKey: 'pide_stek_veze_susam_name', descriptionKey: 'pide_stek_veze_susam_desc', ingredientsKey: 'pide_stek_veze_susam_ingredients' }, { nameKey: 'pide_tuna_name', descriptionKey: 'pide_tuna_desc', ingredientsKey: 'pide_tuna_ingredients' }, { nameKey: 'pide_proshute_name', descriptionKey: 'pide_proshute_desc', ingredientsKey: 'pide_proshute_ingredients' }, { nameKey: 'pide_ragazzi_name', descriptionKey: 'pide_ragazzi_desc', ingredientsKey: 'pide_ragazzi_ingredients' } ] },
-            "PORTION": { titleKey: 'menu_portion', items: [ { nameKey: 'portion_chicken_fingers_name', descriptionKey: 'portion_chicken_fingers_desc', ingredientsKey: 'portion_chicken_fingers_ingredients' }, { nameKey: 'portion_pleskavic_sharri_name', descriptionKey: 'portion_pleskavic_sharri_desc', ingredientsKey: 'portion_pleskavic_sharri_ingredients' }, { nameKey: 'portion_chicken_salad_name', descriptionKey: 'portion_chicken_salad_desc', ingredientsKey: 'portion_chicken_salad_ingredients' } ] },
-            "TOSTA": { titleKey: 'menu_tosta', items: [ { nameKey: 'tost_sallam_name', descriptionKey: 'tost_sallam_desc', ingredientsKey: 'tost_sallam_ingredients' }, { nameKey: 'tost_suxhuk_name', descriptionKey: 'tost_suxhuk_desc', ingredientsKey: 'tost_suxhuk_ingredients' }, { nameKey: 'tost_proshute_qips_name', descriptionKey: 'tost_proshute_qips_desc', ingredientsKey: 'tost_proshute_qips_ingredients' } ] },
-            "BURGER": { titleKey: 'menu_burger', items: [ { nameKey: 'burger_classic_name', descriptionKey: 'burger_classic_desc', ingredientsKey: 'burger_classic_ingredients' }, { nameKey: 'burger_cheese_name', descriptionKey: 'burger_cheese_desc', ingredientsKey: 'burger_cheese_ingredients' }, { nameKey: 'burger_chicken_name', descriptionKey: 'burger_chicken_desc', ingredientsKey: 'burger_chicken_ingredients' }, { nameKey: 'burger_crispy_chicken_name', descriptionKey: 'burger_crispy_chicken_desc', ingredientsKey: 'burger_crispy_chicken_ingredients' }, { nameKey: 'burger_ragazzi_name', descriptionKey: 'burger_ragazzi_desc', ingredientsKey: 'burger_ragazzi_ingredients' } ] },
-            "LAHMAXHUN": { titleKey: 'menu_lahmaxhun', items: [ { nameKey: 'lahmacun_classic_name', descriptionKey: 'lahmacun_classic_desc', ingredientsKey: 'lahmacun_classic_ingredients' }, { nameKey: 'lahmacun_kackavall_name', descriptionKey: 'lahmacun_kackavall_desc', ingredientsKey: 'lahmacun_kackavall_ingredients' } ] },
-            "PIZZA FOR KIDS": { titleKey: 'menu_pizza_for_kids', items: [ { nameKey: 'pizza_mickey_mouse_name', descriptionKey: 'pizza_mickey_mouse_desc', ingredientsKey: 'pizza_mickey_mouse_ingredients' }, { nameKey: 'pizza_me_zemer_name', descriptionKey: 'pizza_me_zemer_desc', ingredientsKey: 'pizza_me_zemer_ingredients' } ] },
-            "EXTRAS": { titleKey: 'menu_extras', items: [ { nameKey: 'extras_pomfrit_name', descriptionKey: 'extras_pomfrit_desc', ingredientsKey: 'extras_pomfrit_ingredients' }, { nameKey: 'extras_sos_hudhres_name', descriptionKey: 'extras_sos_hudhres_desc', ingredientsKey: 'extras_sos_hudhres_ingredients' }, { nameKey: 'extras_kackavall_name', descriptionKey: 'extras_kackavall_desc', ingredientsKey: 'extras_kackavall_ingredients' }, { nameKey: 'extras_suxhuk_name', descriptionKey: 'extras_suxhuk_desc', ingredientsKey: 'extras_suxhuk_ingredients' }, { nameKey: 'extras_veze_name', descriptionKey: 'extras_veze_desc', ingredientsKey: 'extras_veze_ingredients' }, { nameKey: 'extras_pije_freskuese_name', descriptionKey: 'extras_pije_freskuese_desc', ingredientsKey: 'extras_pije_freskuese_ingredients' } ] }
-        };
-
-        menuCardData = {
-            "PIZZA":{items:[{nameKey:'pizza_margarita_name',image:'https://i.imgur.com/YSLS4Pp.png',theme:{bgGradient:'linear-gradient(135deg, #e74c3c, #c0392b)',bgElements:['🍅','🧀','🌿']}},{nameKey:'pizza_funghi_name',image:'https://i.imgur.com/qeZbEEK.png',theme:{bgGradient:'linear-gradient(135deg, #8B4513, #A0522D)',bgElements:['🍄','🧀','🌿']}},{nameKey:'pizza_tuna_name',image:'https://i.imgur.com/UYjPtl2.png',theme:{bgGradient:'linear-gradient(135deg, #3498db, #2980b9)',bgElements:['🐟','🧅','🌊']}},{nameKey:'pizza_suxhuk_name',image:'https://i.imgur.com/LDk4NV4.png',theme:{bgGradient:'linear-gradient(135deg, #e67e22, #d35400)',bgElements:['🌭','🧀','🌶️']}},{nameKey:'pizza_prosciutto_name',image:'https://i.imgur.com/pAs9K3M.png',theme:{bgGradient:'linear-gradient(135deg, #9b59b6, #8e44ad)',bgElements:['🍖','🧀','🥬']}},{nameKey:'pizza_capricciosa_name',image:'https://i.imgur.com/UiMfyNV.png',theme:{bgGradient:'linear-gradient(135deg, #7e57c2, #5e35b1)',bgElements:['🍖','🍄','🫒']}},{nameKey:'pizza_quattro_formaggi_name',image:'https://i.imgur.com/1ojUNVW.png',theme:{bgGradient:'linear-gradient(135deg, #ffd54f, #ffc107)',bgElements:['🧀','🧀','🧀'],textColor:'#3e2723'}},{nameKey:'pizza_calzone_name',image:'https://i.imgur.com/4glW04Z.png',theme:{bgGradient:'linear-gradient(135deg, #ff7043, #f4511e)',bgElements:['🥟','🍖','🍄']}},{nameKey:'pizza_vegetarian_name',image:'https://i.imgur.com/7aNBE1u.png',theme:{bgGradient:'linear-gradient(135deg, #66bb6a, #43a047)',bgElements:['🥦','🍅','🫑']}},{nameKey:'pizza_durum_name',image:'https://i.imgur.com/kgL4KnM.png',theme:{bgGradient:'linear-gradient(135deg, #8d6e63, #6d4c41)',bgElements:['🌯','🍖','🍄']}},{nameKey:'pizza_ragazzi_name',image:'https://i.imgur.com/6N3P5gn.png',theme:{bgGradient:'linear-gradient(135deg, #e53935, #c62828)',bgElements:['🍕','🍖','🌶️']}}]},
-            "BAGUETTE": {items: [{ nameKey: 'baguette_chicken_name', image: 'https://i.imgur.com/YYcTLWB.png', theme: { bgGradient: 'linear-gradient(135deg, #f7b733, #fc4a1a)', bgElements: ['🥖', '🍗', '🥬'] } }, { nameKey: 'baguette_adana_name', image: 'https://i.imgur.com/jAx7ozx.png', theme: { bgGradient: 'linear-gradient(135deg, #D31027, #EA384D)', bgElements: ['🥖', '🌶️', '🥩'] } }, { nameKey: 'baguette_suxhuk_name', image: 'https://i.imgur.com/luubq25.png', theme: { bgGradient: 'linear-gradient(135deg, #c0392b, #8e44ad)', bgElements: ['🥖', '🌭', '🧀'] } }, { nameKey: 'baguette_pleskavic_name', image: 'https://i.imgur.com/b3YKVLA.png', theme: { bgGradient: 'linear-gradient(135deg, #4b6cb7, #182848)', bgElements: ['🥖', '🍔', '🧅'] } }] },
-            "PIDE": { items: [{ nameKey: 'pide_kackavall_name', image: 'https://i.imgur.com/2w3kloI.png', theme: { bgGradient: 'linear-gradient(135deg, #FFC837, #FF8008)', bgElements: ['🥖', '🧀'] } }, { nameKey: 'pide_suxhuk_name', image: 'https://i.imgur.com/bDSrUcH.png', theme: { bgGradient: 'linear-gradient(135deg, #e53935, #c62828)', bgElements: ['🥖', '🌭', '🌶️'] } }, { nameKey: 'pide_mish_bluar_name', image: 'https://i.imgur.com/iV8bvsY.png', theme: { bgGradient: 'linear-gradient(135deg, #783a00, #c35a00)', bgElements: ['🥖', '🥩', '🧅'] } }, { nameKey: 'pide_stek_veze_susam_name', image: 'https://i.imgur.com/0nt7iUm.png', theme: { bgGradient: 'linear-gradient(135deg, #434343, #000000)', bgElements: ['🥖', '🍳', '🥩'] } }, { nameKey: 'pide_tuna_name', image: 'https://i.imgur.com/yNzZ5t9.png', theme: { bgGradient: 'linear-gradient(135deg, #00c6ff, #0072ff)', bgElements: ['🥖', '🐟', '🌽'] } }, { nameKey: 'pide_proshute_name', image: 'https://i.imgur.com/NTuwILL.png', theme: { bgGradient: 'linear-gradient(135deg, #ec77ab, #7873f5)', bgElements: ['🥖', '🍖', '🌿'] } }, { nameKey: 'pide_ragazzi_name', image: 'https://i.imgur.com/NgbiDKs.png', theme: { bgGradient: 'linear-gradient(135deg, #ff00cc, #333399)', bgElements: ['🥖', '✨', '👨‍🍳'] } }] },
-            "PORTION": { items: [{ nameKey: 'portion_chicken_fingers_name', image: 'https://i.imgur.com/oyKT9e6.png', theme: { bgGradient: 'linear-gradient(135deg, #FFD700, #FBB034)', bgElements: ['🍗', '🍟', '😋'], textColor: '#000000' } }, { nameKey: 'portion_pleskavic_sharri_name', image: 'https://i.imgur.com/m4TNFiC.png', theme: { bgGradient: 'linear-gradient(135deg, #7f5a83, #0d324d)', bgElements: ['🍔', '🧅', '🔥'] } }, { nameKey: 'portion_chicken_salad_name', image: 'https://i.imgur.com/xjd5FNE.png', theme: { bgGradient: 'linear-gradient(135deg, #56ab2f, #a8e063)', bgElements: ['🥗', '🍗', '🍅'] } }] },
-            "TOSTA": { items: [{ nameKey: 'tost_sallam_name', image: 'https://i.imgur.com/cutD45v.png', theme: { bgGradient: 'linear-gradient(135deg, #e67e22, #d35400)', bgElements: ['🥪', '🧀'] } }, { nameKey: 'tost_suxhuk_name', image: 'https://i.imgur.com/8WCgONz.png', theme: { bgGradient: 'linear-gradient(135deg, #C04848, #480048)', bgElements: ['🥪', '🌶️', '🌭'] } }, { nameKey: 'tost_proshute_qips_name', image: 'https://i.imgur.com/sOfP7k7.png', theme: { bgGradient: 'linear-gradient(135deg, #1c92d2, #f2fcfe)', bgElements: ['🥪', '🍖', '🇮🇹'], textColor: '#000000' } }] },
-            "BURGER": { items: [{ nameKey: 'burger_classic_name', image: 'https://i.imgur.com/j4XFRfn.png', theme: { bgGradient: 'linear-gradient(135deg, #c21500, #ffc500)', bgElements: ['🍔', '🥩', '🥬'] } }, { nameKey: 'burger_cheese_name', image: 'https://i.imgur.com/kQbvfDj.png', theme: { bgGradient: 'linear-gradient(135deg, #ffc500, #c21500)', bgElements: ['🍔', '🧀', '😋'] } }, { nameKey: 'burger_chicken_name', image: 'https://i.imgur.com/OVKD1yV.png', theme: { bgGradient: 'linear-gradient(135deg, #DAA520, #B8860B)', bgElements: ['🍔', '🍗', '🍟'] } }, { nameKey: 'burger_crispy_chicken_name', image: 'https://i.imgur.com/qkYOjl2.png', theme: { bgGradient: 'linear-gradient(135deg, #FF8C00, #FFD700)', bgElements: ['🍔', '🍗', '💥'], textColor: '#000000' } }, { nameKey: 'burger_ragazzi_name', image: 'https://i.imgur.com/Q9eycWS.png', theme: { bgGradient: 'linear-gradient(135deg, #2c3e50, #000000)', bgElements: ['🍔', '✨', '🔥'] } }] },
-            "LAHMAXHUN": { items: [{ nameKey: 'lahmacun_classic_name', image: 'https://i.imgur.com/Fk88h8g.png', theme: { bgGradient: 'linear-gradient(135deg, #8B4513, #CD853F)', bgElements: ['🫓', '🥩', '🍋'] } }, { nameKey: 'lahmacun_kackavall_name', image: 'https://i.imgur.com/T4PTzz0.png', theme: { bgGradient: 'linear-gradient(135deg, #CD853F, #8B4513)', bgElements: ['🫓', '🧀', '🥩'] } }] },
-            "PIZZA FOR KIDS": { items: [{ nameKey: 'pizza_mickey_mouse_name', image: 'https://i.imgur.com/or7yDbi.png', theme: { bgGradient: 'linear-gradient(135deg, #ff4e50, #f9d423)', bgElements: ['🍕', '🐭', '🎈'] } }, { nameKey: 'pizza_me_zemer_name', image: 'https://i.imgur.com/tLhY1b0.png', theme: { bgGradient: 'linear-gradient(135deg, #e96443, #904e95)', bgElements: ['🍕', '❤️', '💕'] } }] },
-            "EXTRAS": { items: [{ nameKey: 'extras_pomfrit_name', image: 'https://i.imgur.com/uFLGVqz.png', theme: { bgGradient: 'linear-gradient(135deg, #f9d423, #ff4e50)', bgElements: ['🍟'], textColor: '#ffffff' } }, { nameKey: 'extras_sos_hudhres_name', image: 'https://i.imgur.com/pauilZK.png', theme: { bgGradient: 'linear-gradient(135deg, #f0fff0, #d3d3d3)', bgElements: ['🧄', '💧'], textColor: '#000000'} }, { nameKey: 'extras_kackavall_name', image: 'https://i.imgur.com/1WqtWn9.png', theme: { bgGradient: 'linear-gradient(135deg, #ffc500, #9b870c)', bgElements: ['🧀'] } }, { nameKey: 'extras_suxhuk_name', image: 'https://i.imgur.com/OwXFEvQ.png', theme: { bgGradient: 'linear-gradient(135deg, #c21500, #800000)', bgElements: ['🌭', '🌶️'] } }, { nameKey: 'extras_veze_name', image: 'https://i.imgur.com/FYthOoh.png', theme: { bgGradient: 'linear-gradient(135deg, #FFD700, #2EAD56)', bgElements: ['🍳'] } }, { nameKey: 'extras_pije_freskuese_name', image: 'https://i.imgur.com/ZFaSPMN.png', theme: { bgGradient: 'linear-gradient(135deg, #00c6ff, #0072ff)', bgElements: ['🥤', '🧊', '💧'] } }] }
-        };
+    /* MOBILE CATEGORY DROPDOWN STYLES */
+    .menu-nav-links.desktop-nav { display: none; } /* Hide desktop nav */
+    .menu-category-selector.mobile-nav { /* Show and style mobile dropdown */
+        display: block;
+        position: relative;
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto 1.5rem;
+    }
+    .category-selector-btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: rgba(0,0,0,0.25);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .category-selector-btn .fa-chevron-down {
+        transition: transform 0.3s ease;
+    }
+    .menu-category-selector.open .category-selector-btn .fa-chevron-down {
+        transform: rotate(180deg);
+    }
+    .category-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border-radius: 10px;
+        z-index: 100;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 0.5rem;
+    }
+    .menu-category-selector.open .category-dropdown {
+        display: block;
+    }
+    .category-dropdown a {
+        display: block;
+        padding: 0.8rem 1rem;
+        color: #333;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+    .category-dropdown a:hover {
+        background: var(--light-bg);
+    }
+    .category-dropdown a.active {
+        background: var(--accent-color);
+        color: #000;
     }
 
-    // --- STATE MANAGEMENT ---
-    let activeMenuKey = "PIZZA";
-    let currentItemIndex = 0;
-    let selectedSize = 'S';
-    let animationInProgress = false;
+    /* MENU PAGE MOBILE FIXES */
+    .pizza-display {
+        width: 95%;
+        padding: 1.5rem 1rem;
+    }
+    .pizza-content {
+        gap: 0.5rem;
+    }
+    .pizza-image-container {
+        max-width: 65vw;
+        max-height: 65vw;
+    }
+    #pizza-name { font-size: 1.8rem; }
+    .pizza-description { font-size: 0.95rem; margin-bottom: 0.75rem; }
+    .ingredients { margin-bottom: 0.75rem; }
+    .size-option {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    .pizza-navigation {
+        width: 100%;
+        padding: 0 1rem;
+        max-width: 100%;
+        justify-content: space-between;
+    }
+    .order-now-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
 
-    // --- DOM ELEMENTS ---
-    const mainNavLinks = document.querySelectorAll('.main-nav a[data-page], .page-switcher');
-    const fanFavoriteLinks = document.querySelectorAll('.featured-items .item-card');
-    const pages = document.querySelectorAll('.page');
-    const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
-    const mainNav = document.querySelector('.main-nav');
-    const languageSwitcher = document.querySelector('.language-switcher');
-    const selectedLangEl = document.querySelector('.selected-lang');
-    const langDropdown = document.querySelector('.lang-dropdown');
+    /* FOOTER MOBILE FIXES */
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2.5rem;
+    }
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-section p {
+        justify-content: center;
+    }
+}
+
+/* Extra Small Devices (Phones, up to 480px) */
+@media (max-width: 480px) {
+    .hero-content h1 { font-size: 2.2rem; }
+    .hero-content p { font-size: 1rem; }
+    .btn-primary, .btn-secondary { padding: 0.8rem 1.8rem; font-size: 0.9rem; }
+    .featured-items, .about-preview, .about-page { padding: 4rem 0; }
+    .items-grid { grid-template-columns: 1fr; }
+
+    /* MENU PAGE SMALL MOBILE */
+    #menu-title { font-size: 2rem; }
+    #pizza-name { font-size: 1.6rem; }
+    .pizza-image-container { max-width: 240px; }
+    .pizza-description { font-size: 0.9rem; }
+    .ingredients span { font-size: 0.8rem; padding: 0.2rem 0.6rem;}
     
-    // Menu page elements
-    const menuPageContainer = document.getElementById('menu-page-container');
-    const menuTitleEl = document.getElementById('menu-title');
-    const pizzaDisplay = document.querySelector('.pizza-display');
-    const itemNameEl = document.getElementById('pizza-name');
-    const itemDescriptionEl = document.getElementById('pizza-description');
-    const itemImageEl = document.getElementById('pizza-image');
-    const sizeSelector = document.querySelector('.size-selector-vertical');
-    const ingredientsListEl = document.getElementById('ingredients-list');
-    const prevBtn = document.getElementById('prev-pizza');
-    const nextBtn = document.getElementById('next-pizza');
-    const orderNowBtn = document.getElementById('order-now-btn');
-    const phoneModal = document.getElementById('phone-modal');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const floatingElements = document.getElementById('floating-elements');
-    const desktopMenuNavLinks = document.querySelectorAll('.menu-nav-links.desktop-nav a');
-    
-    // New Mobile Dropdown Elements
-    const menuCategorySelector = document.querySelector('.menu-category-selector');
-    const categorySelectorBtn = document.querySelector('.category-selector-btn');
-    const categoryDropdown = document.querySelector('.category-dropdown');
-    const categoryDropdownLinks = document.querySelectorAll('.category-dropdown a');
-
-
-    // --- LANGUAGE & TRANSLATION ---
-    function setLanguage(lang) {
-        if (!translations[lang]) {
-            console.error(`Language "${lang}" not found.`);
-            return;
-        }
-        currentLang = lang;
-        document.body.classList.add('lang-switching');
-
-        setTimeout(() => {
-            document.querySelectorAll('[data-lang]').forEach(el => {
-                const key = el.dataset.lang;
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-            
-            renderCurrentMenuItem();
-            updateCategoryButtonText();
-
-            const selectedLangAnchor = langDropdown.querySelector(`[data-lang-code="${lang}"]`);
-            if (selectedLangAnchor) {
-                selectedLangEl.querySelector('img').src = selectedLangAnchor.querySelector('img').src;
-                selectedLangEl.querySelector('span').textContent = selectedLangAnchor.textContent.trim();
-            }
-            
-            document.body.classList.remove('lang-switching');
-        }, 300);
-    }
-
-    // --- PAGE NAVIGATION ---
-    function switchPage(pageId, isInitialLoad = false) {
-        pages.forEach(page => page.classList.remove('active'));
-        const newPage = document.getElementById(pageId);
-        if (newPage) newPage.classList.add('active');
-
-        document.querySelectorAll('.main-nav a[data-page]').forEach(link => {
-             link.classList.toggle('active', link.dataset.page === pageId);
-        });
-
-        if (!isInitialLoad) {
-            history.pushState({page: pageId}, null, `#${pageId.replace('-page', '')}`);
-        }
-        
-        window.scrollTo(0, 0);
-        if(mainNav.classList.contains('mobile-active')) {
-            mainNav.classList.remove('mobile-active');
-        }
-    }
-    
-    // --- MENU PAGE LOGIC ---
-    function applyTheme(theme) {
-        const defaultTheme = {
-            bgGradient: 'linear-gradient(135deg, #444, #222)',
-            textColor: '#ffffff',
-            accentColor: '#FFD700',
-            bgElements: ['🍕']
-        };
-        const activeTheme = { ...defaultTheme, ...theme };
-
-        menuPageContainer.style.background = activeTheme.bgGradient;
-        pizzaDisplay.style.color = activeTheme.textColor;
-        pizzaDisplay.style.setProperty('--accent-color', activeTheme.accentColor);
-        
-        createFloatingElements(activeTheme.bgElements);
-    }
-
-    function createFloatingElements(elements) {
-        floatingElements.innerHTML = '';
-        if (!elements || elements.length === 0) return;
-        
-        const elementCount = window.innerWidth < 768 ? 3 : 5; // Fewer elements on mobile
-        elements.forEach(emoji => {
-            for (let i = 0; i < elementCount; i++) {
-                const el = document.createElement('div');
-                el.className = 'floating-emoji';
-                el.textContent = emoji;
-                el.style.left = `${Math.random() * 100}vw`;
-                el.style.animationDelay = `${Math.random() * 15}s`;
-                el.style.animationDuration = `${10 + Math.random() * 10}s`;
-                el.style.fontSize = `${1.5 + Math.random()}rem`;
-                floatingElements.appendChild(el);
-            }
-        });
-    }
-
-    function renderCurrentMenuItem() {
-        const menu = menuData[activeMenuKey];
-        if (!menu || !menu.items || menu.items.length === 0) {
-            pizzaDisplay.style.display = 'none';
-            menuTitleEl.textContent = "Coming Soon!";
-            floatingElements.innerHTML = '';
-            return;
-        }
-        pizzaDisplay.style.display = 'flex';
-
-        const item = menu.items[currentItemIndex];
-        const cardInfo = menuCardData[activeMenuKey]?.items[currentItemIndex];
-        const t = translations[currentLang];
-        
-        menuTitleEl.textContent = t[menu.titleKey] || activeMenuKey;
-        itemNameEl.textContent = t[item.nameKey] || `Item ${currentItemIndex + 1}`;
-        itemDescriptionEl.textContent = t[item.descriptionKey] || "Description not available.";
-        
-        if (cardInfo) {
-            itemImageEl.src = cardInfo.image;
-            itemImageEl.alt = t[item.nameKey] || activeMenuKey;
-            applyTheme(cardInfo.theme);
-        }
-
-        ingredientsListEl.innerHTML = '';
-        const ingredientsString = t[item.ingredientsKey] || '';
-        const ingredients = ingredientsString.split(',');
-
-        if (ingredients.length > 0 && ingredients[0] !== '') {
-            ingredients.forEach(ingredient => {
-                const span = document.createElement('span');
-                span.textContent = ingredient.trim();
-                ingredientsListEl.appendChild(span);
-            });
-            ingredientsListEl.style.display = 'flex';
-        } else {
-            ingredientsListEl.style.display = 'none';
-        }
-
-        sizeSelector.style.display = activeMenuKey === 'PIZZA' ? 'flex' : 'none';
-        updateOrderButtonText();
-    }
-    
-    async function navigateItems(direction) {
-        if (animationInProgress) return;
-        const menu = menuData[activeMenuKey];
-        if (!menu || menu.items.length <= 1) return;
-
-        animationInProgress = true;
-        pizzaDisplay.classList.add('is-navigating');
-        
-        await new Promise(resolve => setTimeout(resolve, 250));
-        
-        currentItemIndex = (currentItemIndex + direction + menu.items.length) % menu.items.length;
-        renderCurrentMenuItem();
-        
-        await new Promise(resolve => setTimeout(resolve, 50));
-        pizzaDisplay.classList.remove('is-navigating');
-        animationInProgress = false;
-    }
-
-    function switchMenuCategory(newMenuKey) {
-        if (activeMenuKey === newMenuKey) return;
-        
-        activeMenuKey = newMenuKey;
-        currentItemIndex = 0;
-        
-        // Update both desktop and mobile navs
-        desktopMenuNavLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
-        categoryDropdownLinks.forEach(link => link.classList.toggle('active', link.dataset.menu === activeMenuKey));
-        
-        updateCategoryButtonText();
-
-        pizzaDisplay.classList.add('is-navigating');
-        setTimeout(() => {
-            renderCurrentMenuItem();
-            pizzaDisplay.classList.remove('is-navigating');
-        }, 250);
-    }
-    
-    function updateOrderButtonText() {
-        const orderNowKey = 'orderNow';
-        const baseText = translations[currentLang]?.[orderNowKey] || 'Order Now';
-        
-        orderNowBtn.textContent = activeMenuKey === 'PIZZA' ? `${baseText} (${selectedSize})` : baseText;
-    }
-
-    function updateCategoryButtonText() {
-        if (!categorySelectorBtn) return;
-        const activeLink = document.querySelector(`.category-dropdown a[data-menu="${activeMenuKey}"]`);
-        if (activeLink) {
-            categorySelectorBtn.querySelector('span').textContent = activeLink.textContent;
-        }
-    }
-
-    function showPhoneModal() {
-        phoneModal.classList.add('show');
-    }
-
-    function hidePhoneModal() {
-        phoneModal.classList.remove('show');
-    }
-
-    // --- EVENT LISTENERS ---
-    function setupEventListeners() {
-        mobileNavToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('mobile-active');
-        });
-
-        mainNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchPage(link.dataset.page);
-            });
-        });
-
-        fanFavoriteLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const menuTarget = link.dataset.menuTarget;
-                const itemTargetName = link.dataset.itemTarget;
-                
-                if (menuTarget && itemTargetName) {
-                    const targetMenu = menuData[menuTarget];
-                    // Find the nameKey in English first to get a stable reference
-                    const itemTargetNameKey = Object.keys(translations.en).find(key => translations.en[key] === itemTargetName);
-                    
-                    const itemIndex = targetMenu.items.findIndex(item => item.nameKey === itemTargetNameKey);
-
-                    if (itemIndex !== -1) {
-                        switchPage('menu-page');
-                        activeMenuKey = menuTarget;
-                        currentItemIndex = itemIndex;
-                        // Defer the category switch slightly to allow page transition
-                        setTimeout(() => switchMenuCategory(menuTarget), 50);
-                    }
-                }
-            });
-        });
-
-        selectedLangEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            languageSwitcher.classList.toggle('open');
-        });
-
-        document.addEventListener('click', () => languageSwitcher.classList.remove('open'));
-
-        langDropdown.addEventListener('click', (e) => {
-            e.preventDefault();
-            const langLink = e.target.closest('a[data-lang-code]');
-            if (langLink) {
-                setLanguage(langLink.dataset.langCode);
-                languageSwitcher.classList.remove('open');
-            }
-        });
-
-        prevBtn.addEventListener('click', () => navigateItems(-1));
-        nextBtn.addEventListener('click', () => navigateItems(1));
-        
-        orderNowBtn.addEventListener('click', showPhoneModal);
-        closeModalBtn.addEventListener('click', hidePhoneModal);
-        phoneModal.addEventListener('click', (event) => {
-            if (event.target === phoneModal) hidePhoneModal();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (pages.item(1).classList.contains('active')) { // If menu page is active
-                if (e.key === 'ArrowLeft') navigateItems(-1);
-                if (e.key === 'ArrowRight') navigateItems(1);
-            }
-            if (e.key === 'Escape' && phoneModal.classList.contains('show')) {
-                hidePhoneModal();
-            }
-        });
-
-        // Listener for desktop nav
-        desktopMenuNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchMenuCategory(link.dataset.menu);
-            });
-        });
-        
-        // Listener for mobile category dropdown button
-        if (categorySelectorBtn) {
-            categorySelectorBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                menuCategorySelector.classList.toggle('open');
-            });
-        }
-        
-        // Listener for links inside the mobile dropdown
-        categoryDropdownLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                menuCategorySelector.classList.remove('open');
-                switchMenuCategory(link.dataset.menu);
-            });
-        });
-        
-        // Global listener to close dropdowns
-        document.addEventListener('click', () => {
-            if (menuCategorySelector) menuCategorySelector.classList.remove('open');
-        });
-
-
-        sizeSelector.addEventListener('click', (e) => {
-            const target = e.target.closest('.size-option');
-            if (!target) return;
-            sizeSelector.querySelector('.active').classList.remove('active');
-            target.classList.add('active');
-            selectedSize = target.dataset.size.charAt(0).toUpperCase();
-            updateOrderButtonText();
-        });
-
-        window.addEventListener('scroll', () => {
-            document.querySelector('.header').classList.toggle('scrolled', window.scrollY > 50);
-        });
-
-        window.addEventListener('popstate', (event) => {
-            const pageId = event.state?.page || 'home-page';
-            switchPage(pageId, true);
-        });
-    }
-
-    // --- INITIALIZATION ---
-    async function init() {
-        initializeData();
-        await loadTranslations();
-        setupEventListeners();
-
-        const initialHash = window.location.hash.substring(1);
-        const initialPageId = initialHash ? `${initialHash}-page` : 'home-page';
-        history.replaceState({page: initialPageId}, '', window.location.href);
-        
-        switchPage(initialPageId, true);
-        setLanguage(currentLang);
-    }
-
-    init();
-});
+    .phone-modal-content { width: 95%; padding: 2rem 1rem; }
+    .footer-section h3 { font-size: 1.3rem; }
+}
