@@ -1,218 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAGAZZI FASTFOOD & PIZZA - Authentic Italian Taste</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAGAZZI FASTFOOD & PIZZA - Authentic Italian Taste</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="floating-elements"></div>
+    <div id="floating-elements"></div>
 
-    <header class="header">
-        <div class="container">
-            <div class="logo">RAGAZZI<br><span>FASTFOOD & PIZZA</span></div>
-            <nav class="main-nav">
-                <a href="#home" class="active" data-page="home-page" data-lang="home">Home</a>
-                <a href="#menu" data-page="menu-page" data-lang="menu">Menu</a>
-                <a href="#about" data-page="about-page" data-lang="about">About Us</a>
-                <div class="language-switcher">
-                    <div class="selected-lang">
-                        <img src="https://flagcdn.com/gb.svg" alt="English Flag">
-                        <span data-lang-key="en">English</span>
-                    </div>
-                    <div class="lang-dropdown">
-                        <a href="#" data-lang-code="en"><img src="https://flagcdn.com/gb.svg" alt="English Flag"> English</a>
-                        <a href="#" data-lang-code="sq"><img src="https://flagcdn.com/al.svg" alt="Albanian Flag"> Albanian</a>
-                        <a href="#" data-lang-code="mk"><img src="https://flagcdn.com/mk.svg" alt="Macedonian Flag"> Macedonian</a>
-                        <a href="#" data-lang-code="tr"><img src="https://flagcdn.com/tr.svg" alt="Turkish Flag"> Turkish</a>
-                    </div>
-                </div>
-            </nav>
-            <div class="mobile-nav-toggle"><i class="fas fa-bars"></i></div>
-        </div>
-    </header>
+    <header class="header">
+        <div class="container">
+            <div class="logo">RAGAZZI<br><span>FASTFOOD & PIZZA</span></div>
+            <nav class="main-nav">
+                <a href="#home" class="active" data-page="home-page" data-lang="home">Home</a>
+                <a href="#menu" data-page="menu-page" data-lang="menu">Menu</a>
+                <a href="#about" data-page="about-page" data-lang="about">About Us</a>
+                <div class="language-switcher">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/gb.svg" alt="English Flag">
+                        <span data-lang-key="en">English</span>
+                    </div>
+                    <div class="lang-dropdown">
+                        <a href="#" data-lang-code="en"><img src="https://flagcdn.com/gb.svg" alt="English Flag"> English</a>
+                        <a href="#" data-lang-code="sq"><img src="https://flagcdn.com/al.svg" alt="Albanian Flag"> Albanian</a>
+                        <a href="#" data-lang-code="mk"><img src="https://flagcdn.com/mk.svg" alt="Macedonian Flag"> Macedonian</a>
+                        <a href="#" data-lang-code="tr"><img src="https://flagcdn.com/tr.svg" alt="Turkish Flag"> Turkish</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="mobile-nav-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
 
-    <main>
-        <section id="home-page" class="page active">
-            <div class="hero">
-                <div class="hero-content">
-                    <h1 data-lang="heroTitle">Taste the Passion in Every Slice</h1>
-                    <p data-lang="heroSubtitle">Authentic recipes, fresh ingredients, and a love for great food. Welcome to Ragazzi.</p>
-                    <a href="#menu" class="btn-primary page-switcher" data-page="menu-page" data-lang="exploreMenu">Explore Our Menu</a>
-                </div>
-            </div>
+    <main>
+        <section id="home-page" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 data-lang="heroTitle">Taste the Passion in Every Slice</h1>
+                    <p data-lang="heroSubtitle">Authentic recipes, fresh ingredients, and a love for great food. Welcome to Ragazzi.</p>
+                    <a href="#menu" class="btn-primary page-switcher" data-page="menu-page" data-lang="exploreMenu">Explore Our Menu</a>
+                </div>
+            </div>
 
-            <section class="featured-items">
-                <div class="container">
-                    <h2 data-lang="fanFavorites">Our Fan Favorites</h2>
-                    <div class="items-grid">
-                        <div class="item-card" data-menu-target="PIZZA" data-item-target="PIZZA RAGAZZI">
-                            <img src="https://i.imgur.com/6N3P5gn.png" alt="Pizza Ragazzi" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Ragazzi';">
-                            <h3 data-lang="fanPizzaTitle">Pizza Ragazzi</h3>
-                            <p data-lang="fanPizzaDesc">Our signature pizza, loaded with a special mix of all your favorite toppings.</p>
-                        </div>
-                        <div class="item-card" data-menu-target="BURGER" data-item-target="CLASSIC BURGER">
-                            <img src="https://i.imgur.com/j4XFRfn.png" alt="Classic Burger" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Classic+Burger';">
-                            <h3 data-lang="fanBurgerTitle">Classic Burger</h3>
-                            <p data-lang="fanBurgerDesc">A juicy beef patty with fresh lettuce, tomato, and our signature sauce.</p>
-                        </div>
-                        <div class="item-card" data-menu-target="PIDE" data-item-target="PIDE WITH GROUND MEAT">
-                            <img src="https://i.imgur.com/iV8bvsY.png" alt="Pide with Ground Meat" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pide';">
-                            <h3 data-lang="fanPideTitle">Pide Me Mish Te Bluar</h3>
-                            <p data-lang="fanPideDesc">Flavorful flatbread with seasoned ground meat, onions, and tomatoes.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <section class="featured-items">
+                <div class="container">
+                    <h2 data-lang="fanFavorites">Our Fan Favorites</h2>
+                    <div class="items-grid">
+                        <div class="item-card" data-menu-target="PIZZA" data-item-target="PIZZA RAGAZZI">
+                            <img src="https://i.imgur.com/6N3P5gn.png" alt="Pizza Ragazzi" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Ragazzi';">
+                            <h3 data-lang="fanPizzaTitle">Pizza Ragazzi</h3>
+                            <p data-lang="fanPizzaDesc">Our signature pizza, loaded with a special mix of all your favorite toppings.</p>
+                        </div>
+                        <div class="item-card" data-menu-target="BURGER" data-item-target="CLASSIC BURGER">
+                            <img src="https://i.imgur.com/j4XFRfn.png" alt="Classic Burger" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Classic+Burger';">
+                            <h3 data-lang="fanBurgerTitle">Classic Burger</h3>
+                            <p data-lang="fanBurgerDesc">A juicy beef patty with fresh lettuce, tomato, and our signature sauce.</p>
+                        </div>
+                        <div class="item-card" data-menu-target="PIDE" data-item-target="PIDE WITH GROUND MEAT">
+                            <img src="https://i.imgur.com/iV8bvsY.png" alt="Pide with Ground Meat" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pide';">
+                            <h3 data-lang="fanPideTitle">Pide Me Mish Te Bluar</h3>
+                            <p data-lang="fanPideDesc">Flavorful flatbread with seasoned ground meat, onions, and tomatoes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            <section class="about-preview">
-                <div class="container">
-                    <div class="about-preview-content">
-                        <h2 data-lang="ourStory">Our Story</h2>
-                        <p data-lang="ourStoryPreview">Founded on a passion for authentic flavors and community, Ragazzi has been serving up delicious moments since day one. We believe in quality you can taste, from our hand-tossed dough to our locally sourced ingredients.</p>
-                        <a href="#about" class="btn-secondary page-switcher" data-page="about-page" data-lang="learnMore">Learn More About Us</a>
-                    </div>
-                </div>
-            </section>
+            <section class="about-preview">
+                <div class="container">
+                    <div class="about-preview-content">
+                        <h2 data-lang="ourStory">Our Story</h2>
+                        <p data-lang="ourStoryPreview">Founded on a passion for authentic flavors and community, Ragazzi has been serving up delicious moments since day one. We believe in quality you can taste, from our hand-tossed dough to our locally sourced ingredients.</p>
+                        <a href="#about" class="btn-secondary page-switcher" data-page="about-page" data-lang="learnMore">Learn More About Us</a>
+                    </div>
+                </div>
+            </section>
+        </section>
 
-        </section>
+        <section id="menu-page" class="page">
+             <div id="menu-page-container">
+                <nav class="menu-nav-links desktop-nav">
+                    <a href="#" class="active" data-menu="PIZZA" data-lang="menu_cat_pizza">PIZZA</a>
+                    <a href="#" data-menu="BAGUETTE" data-lang="menu_cat_baguette">BAGUETTE</a>
+                    <a href="#" data-menu="PIDE" data-lang="menu_cat_pide">PIDE</a>
+                    <a href="#" data-menu="PORTION" data-lang="menu_cat_portion">PORTION</a>
+                    <a href="#" data-menu="TOSTA" data-lang="menu_cat_tosta">TOAST</a>
+                    <a href="#" data-menu="BURGER" data-lang="menu_cat_burger">BURGER</a>
+                    <a href="#" data-menu="LAHMAXHUN" data-lang="menu_cat_lahmacun">LAHMAJUN</a>
+                    <a href="#" data-menu="PIZZA FOR KIDS" data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</a>
+                    <a href="#" data-menu="EXTRAS" data-lang="menu_cat_extras">EXTRAS</a>
+                </nav>
+                
+                <div class="category-scroller-container mobile-nav">
+                    <div class="category-scroller">
+                        <a href="#" class="category-chip active" data-menu="PIZZA"><i class="fas fa-pizza-slice"></i><span data-lang="menu_cat_pizza">PIZZA</span></a>
+                        <a href="#" class="category-chip" data-menu="BURGER"><i class="fas fa-burger"></i><span data-lang="menu_cat_burger">BURGER</span></a>
+                        <a href="#" class="category-chip" data-menu="PIDE"><i class="fas fa-stroopwafel"></i><span data-lang="menu_cat_pide">PIDE</span></a>
+                        <a href="#" class="category-chip" data-menu="BAGUETTE"><i class="fas fa-bread-slice"></i><span data-lang="menu_cat_baguette">BAGUETTE</span></a>
+                        <a href="#" class="category-chip" data-menu="LAHMAXHUN"><i class="fas fa-utensils"></i><span data-lang="menu_cat_lahmacun">LAHMAJUN</span></a>
+                        <a href="#" class="category-chip" data-menu="PORTION"><i class="fas fa-plate-wheat"></i><span data-lang="menu_cat_portion">PORTION</span></a>
+                        <a href="#" class="category-chip" data-menu="TOSTA"><i class="fas fa-tarp"></i><span data-lang="menu_cat_tosta">TOAST</span></a>
+                        <a href="#" class="category-chip" data-menu="PIZZA FOR KIDS"><i class="fas fa-child"></i><span data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</span></a>
+                        <a href="#" class="category-chip" data-menu="EXTRAS"><i class="fas fa-plus-square"></i><span data-lang="menu_cat_extras">EXTRAS</span></a>
+                    </div>
+                </div>
 
-        <section id="menu-page" class="page">
-             <div id="menu-page-container">
-                <nav class="menu-nav-links desktop-nav">
-                    <a href="#" class="active" data-menu="PIZZA" data-lang="menu_cat_pizza">PIZZA</a>
-                    <a href="#" data-menu="BAGUETTE" data-lang="menu_cat_baguette">BAGUETTE</a>
-                    <a href="#" data-menu="PIDE" data-lang="menu_cat_pide">PIDE</a>
-                    <a href="#" data-menu="PORTION" data-lang="menu_cat_portion">PORTION</a>
-                    <a href="#" data-menu="TOSTA" data-lang="menu_cat_tosta">TOAST</a>
-                    <a href="#" data-menu="BURGER" data-lang="menu_cat_burger">BURGER</a>
-                    <a href="#" data-menu="LAHMAXHUN" data-lang="menu_cat_lahmacun">LAHMAJUN</a>
-                    <a href="#" data-menu="PIZZA FOR KIDS" data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</a>
-                    <a href="#" data-menu="EXTRAS" data-lang="menu_cat_extras">EXTRAS</a>
-                </nav>
-                
-                <div class="category-scroller-container mobile-nav">
-                    <div class="category-scroller">
-                        <a href="#" class="category-chip active" data-menu="PIZZA"><i class="fas fa-pizza-slice"></i><span data-lang="menu_cat_pizza">PIZZA</span></a>
-                        <a href="#" class="category-chip" data-menu="BURGER"><i class="fas fa-burger"></i><span data-lang="menu_cat_burger">BURGER</span></a>
-                        <a href="#" class="category-chip" data-menu="PIDE"><i class="fas fa-stroopwafel"></i><span data-lang="menu_cat_pide">PIDE</span></a>
-                        <a href="#" class="category-chip" data-menu="BAGUETTE"><i class="fas fa-bread-slice"></i><span data-lang="menu_cat_baguette">BAGUETTE</span></a>
-                        <a href="#" class="category-chip" data-menu="LAHMAXHUN"><i class="fas fa-utensils"></i><span data-lang="menu_cat_lahmacun">LAHMAJUN</span></a>
-                        <a href="#" class="category-chip" data-menu="PORTION"><i class="fas fa-plate-wheat"></i><span data-lang="menu_cat_portion">PORTION</span></a>
-                        <a href="#" class="category-chip" data-menu="TOSTA"><i class="fas fa-tarp"></i><span data-lang="menu_cat_tosta">TOAST</span></a>
-                        <a href="#" class="category-chip" data-menu="PIZZA FOR KIDS"><i class="fas fa-child"></i><span data-lang="menu_cat_pizza_for_kids">PIZZA FOR KIDS</span></a>
-                        <a href="#" class="category-chip" data-menu="EXTRAS"><i class="fas fa-plus-square"></i><span data-lang="menu_cat_extras">EXTRAS</span></a>
-                    </div>
-                </div>
+                <div class="container">
+                    <h1 id="menu-title">Pick Your Pizza</h1>
+                    <div class="pizza-display">
+                        <div class="size-selector-vertical">
+                            <div class="size-option active" data-size="small">S</div>
+                            <div class="size-option" data-size="medium">M</div>
+                            <div class="size-option" data-size="family">F</div>
+                        </div>
+                        <div class="pizza-content">
+                            <div class="pizza-image-container">
+                                <img id="pizza-image" src="https://i.imgur.com/YSLS4Pp.png" alt="Food item">
+                            </div>
+                            <div class="pizza-info">
+                                <h2 id="pizza-name">Item Name</h2>
+                                <p id="pizza-description" class="pizza-description">Description will appear here</p>
+                            </div>
+                            <div class="ingredients" id="ingredients-list"></div>
+                            <div class="pizza-navigation">
+                                <button id="prev-pizza" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                                <button id="order-now-btn" class="order-now-btn" data-lang="orderNow">Order Now</button>
+                                <button id="next-pizza" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <div class="container">
-                    <h1 id="menu-title">Pick Your Pizza</h1>
-                    <div class="pizza-display">
-                        <div class="size-selector-vertical">
-                            <div class="size-option active" data-size="small">S</div>
-                            <div class="size-option" data-size="medium">M</div>
-                            <div class="size-option" data-size="family">F</div>
-                        </div>
-                        <div class="pizza-content">
-                            <div class="pizza-image-container">
-                                <img id="pizza-image" src="https://i.imgur.com/YSLS4Pp.png" alt="Food item">
-                            </div>
-                            <div class="pizza-info">
-                                <h2 id="pizza-name">Item Name</h2>
-                                <p id="pizza-description" class="pizza-description">Description will appear here</p>
-                            </div>
-                            <div class="ingredients" id="ingredients-list"></div>
-                            <div class="pizza-navigation">
-                                <button id="prev-pizza" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
-                                <button id="order-now-btn" class="order-now-btn" data-lang="orderNow">Order Now</button>
-                                <button id="next-pizza" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section id="about-page" class="page">
+            <div class="about-page">
+                <div class="container">
+                    <section class="about-section">
+                        <h1 data-lang="aboutTitle">The Heart of Ragazzi: A Story of Passion</h1>
+                        <img src="https://i.imgur.com/xi0bh5e.png" alt="Besar Elezi making pizza" class="about-hero-image" onerror="this.onerror=null;this.src='https://placehold.co/1200x500/e8e8e8/666?text=The+Art+of+Pizza';">
+                        <div class="about-text">
+                            <p data-lang="aboutIntro">Ragazzi Fastfood & Pizza was born from a simple yet powerful vision: to serve not just food, but an experience. At the center of this vision is our founder and head pizzaiolo, a young man whose love for pizza is matched only by his dedication to his craft. Every pizza that comes out of our oven is a piece of his story, a story that we are proud to share with you.</p>
+                        </div>
+                    </section>
+    
+                    <section class="about-section">
+                        <h2 data-lang="meetPizzaiolo">Meet the Pizzaiolo</h2>
+                        <div class="pizzaiolo-section">
+                            <img src="https://i.imgur.com/O9GKi3A.png" alt="Besar Elezi" onerror="this.onerror=null;this.src='https://placehold.co/300x300/e8e8e8/666?text=Besar+Elezi';">
+                            <h3>Besar Elezi</h3>
+                            <p class="title" data-lang="pizzaioloTitle">Founder & Head Pizzaiolo</p>
+                            <p data-lang="pizzaioloBio">Besar is a young and talented artist whose canvas is dough and whose paints are the freshest ingredients. His journey began in the vibrant culinary scene of Berlin, where he didn't just learn to make pizza—he learned to understand it. He forged his skills under the guidance of masters, discovering the secrets to the perfect crust and the most harmonious flavor combinations. For Besar, this was more than a job; it was the discovery of a lifelong passion. He brought that fire back home, and with it, a dream to create a place where every slice tells a story of dedication, quality, and the pure love of food.</p>
+                        </div>
+                    </section>
 
-        <section id="about-page" class="page">
-            <div class="about-page">
-                <div class="container">
-                    <section class="about-section">
-                        <h1 data-lang="aboutTitle">The Heart of Ragazzi: A Story of Passion</h1>
-                        <img src="https://i.imgur.com/xi0bh5e.png" alt="Besar Elezi making pizza" class="about-hero-image" onerror="this.onerror=null;this.src='https://placehold.co/1200x500/e8e8e8/666?text=The+Art+of+Pizza';">
-                        <div class="about-text">
-                            <p data-lang="aboutIntro">Ragazzi Fastfood & Pizza was born from a simple yet powerful vision: to serve not just food, but an experience. At the center of this vision is our founder and head pizzaiolo, a young man whose love for pizza is matched only by his dedication to his craft. Every pizza that comes out of our oven is a piece of his story, a story that we are proud to share with you.</p>
-                        </div>
-                    </section>
-    
-                    <section class="about-section">
-                        <h2 data-lang="meetPizzaiolo">Meet the Pizzaiolo</h2>
-                        <div class="pizzaiolo-section">
-                            <img src="https://i.imgur.com/O9GKi3A.png" alt="Besar Elezi" onerror="this.onerror=null;this.src='https://placehold.co/300x300/e8e8e8/666?text=Besar+Elezi';">
-                            <h3>Besar Elezi</h3>
-                            <p class="title" data-lang="pizzaioloTitle">Founder & Head Pizzaiolo</p>
-                            <p data-lang="pizzaioloBio">Besar is a young and talented artist whose canvas is dough and whose paints are the freshest ingredients. His journey began in the vibrant culinary scene of Berlin, where he didn't just learn to make pizza—he learned to understand it. He forged his skills under the guidance of masters, discovering the secrets to the perfect crust and the most harmonious flavor combinations. For Besar, this was more than a job; it was the discovery of a lifelong passion. He brought that fire back home, and with it, a dream to create a place where every slice tells a story of dedication, quality, and the pure love of food.</p>
-                        </div>
-                    </section>
+                    <section class="about-section">
+                        <h2 data-lang="communityTitle">More Than Pizza: A Commitment to Community</h2>
+                        <div class="about-text">
+                           <p data-lang="communityDesc">Besar believes that a restaurant should be a cornerstone of its community. His passion extends beyond the kitchen and into the hearts of those around him, especially the younger generation. He has a strong connection with kids and frequently shares his craft with local elementary schools. These events are more than just pizza parties; they are vibrant, hands-on lessons in the joy of creation. By teaching children how to make their own pizzas, Besar brings smiles and laughter, showing them that learning can be delicious and that school is a place for fun, friendship, and happy memories.</p>
+                        </div>
+                        <div class="community-gallery">
+                            <img src="https://i.imgur.com/cgUphZ9.png" alt="Besar with school children" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Community+Event';">
+                            <img src="https://i.imgur.com/gWhzV1w.png" alt="Children enjoying pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Happy+Kids';">
+                            <img src="https://i.imgur.com/lslG76N.png" alt="Besar teaching kids to make pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Class';">
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
 
-                    <section class="about-section">
-                        <h2 data-lang="communityTitle">More Than Pizza: A Commitment to Community</h2>
-                        <div class="about-text">
-                           <p data-lang="communityDesc">Besar believes that a restaurant should be a cornerstone of its community. His passion extends beyond the kitchen and into the hearts of those around him, especially the younger generation. He has a strong connection with kids and frequently shares his craft with local elementary schools. These events are more than just pizza parties; they are vibrant, hands-on lessons in the joy of creation. By teaching children how to make their own pizzas, Besar brings smiles and laughter, showing them that learning can be delicious and that school is a place for fun, friendship, and happy memories.</p>
-                        </div>
-                        <div class="community-gallery">
-                            <img src="https://i.imgur.com/cgUphZ9.png" alt="Besar with school children" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Community+Event';">
-                            <img src="https://i.imgur.com/gWhzV1w.png" alt="Children enjoying pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Happy+Kids';">
-                            <img src="https://i.imgur.com/lslG76N.png" alt="Besar teaching kids to make pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Class';">
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </section>
-    </main>
+    <div id="phone-modal" class="phone-modal">
+        <div class="phone-modal-content">
+            <span class="close-modal">×</span>
+            <h3 data-lang="modalTitle">Call or Message Us</h3>
+            <p data-lang="modalSubtitle">Please choose an option below:</p>
+            <a href="tel:+38970421428" class="phone-number"><i class="fas fa-phone"></i> <span data-lang="callUs">Call Us</span></a>
+            <a href="https://wa.me/38971519418" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> <span data-lang="chatOnWhatsApp">Chat on WhatsApp</span></a>
+            <p class="opening-hours" data-lang="openingHours">We're open: 10:00 AM - 12:00 AM</p>
+        </div>
+    </div>
 
-    <div id="phone-modal" class="phone-modal">
-        <div class="phone-modal-content">
-            <span class="close-modal">×</span>
-            <h3 data-lang="modalTitle">Call or Message Us</h3>
-            <p data-lang="modalSubtitle">Please choose an option below:</p>
-            <a href="tel:+38970421428" class="phone-number"><i class="fas fa-phone"></i> <span data-lang="callUs">Call Us</span></a>
-            <a href="https://wa.me/38971519418" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> <span data-lang="chatOnWhatsApp">Chat on WhatsApp</span></a>
-            <p class="opening-hours" data-lang="openingHours">We're open: 10:00 AM - 12:00 AM</p>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 data-lang="footerLocation">Our Location</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> <span>Shuto Orizari 61, Skopje 1000, North Macedonia</span></p>
-                    <p><a href="https://www.google.com/maps/dir//Shuto+Orizari+61,+Skopje+1000,+North+Macedonia/@42.0305661,21.3462518,12z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x135415005ac9d28f:0x5d657fdca8c53835!2m2!1d21.4286192!2d42.0305908?entry=ttu&g_ep=EgoyMDI1MDcwOC4wIKXMDSoASAFQAw%3D%3D" target="_blank"><i class="fas fa-map-marked-alt"></i> <span data-lang="viewOnMap">View on Google Maps</span></a></p>
-                </div>
-                <div class="footer-section">
-                    <h3 data-lang="footerContact">Contact Us</h3>
-                    <p><i class="fas fa-phone"></i> <a href="tel:+38970421428">+389 70 421 428</a></p>
-                    <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/38971519418" target="_blank">+389 71 519 418</a></p>
-                    <p><i class="fas fa-clock"></i> <span data-lang="footerOpen">Open: 10:00 AM - 12:00 AM (Mon-Sun)</span></p>
-                </div>
-                <div class="footer-section">
-                    <h3 data-lang="footerFollow">Follow Us</h3>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/ragazzipizzafastfood" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://g.co/kgs/qPfLJbe" target="_blank" aria-label="Google Reviews"><i class="fab fa-google"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2025 RAGAZZI FASTFOOD & PIZZA. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-    <script src="script.js"></script>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-lang="footerLocation">Our Location</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <span>Shuto Orizari 61, Skopje 1000, North Macedonia</span></p>
+                    <p><a href="https://www.google.com/maps/dir//Shuto+Orizari+61,+Skopje+1000,+North+Macedonia/@42.0305661,21.3462518,12z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x135415005ac9d28f:0x5d657fdca8c53835!2m2!1d21.4286192!2d42.0305908?entry=ttu" target="_blank"><i class="fas fa-map-marked-alt"></i> <span data-lang="viewOnMap">View on Google Maps</span></a></p>
+                </div>
+                <div class="footer-section">
+                    <h3 data-lang="footerContact">Contact Us</h3>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+38970421428">+389 70 421 428</a></p>
+                    <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/38971519418" target="_blank">+389 71 519 418</a></p>
+                    <p><i class="fas fa-clock"></i> <span data-lang="footerOpen">Open: 10:00 AM - 12:00 AM (Mon-Sun)</span></p>
+                </div>
+                <div class="footer-section">
+                    <h3 data-lang="footerFollow">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/ragazzipizzafastfood" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://g.co/kgs/qPfLJbe" target="_blank" aria-label="Google Reviews"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 RAGAZZI FASTFOOD & PIZZA. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
