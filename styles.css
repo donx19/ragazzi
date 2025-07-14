@@ -595,24 +595,29 @@ body.mobile-nav-open {
         visibility: visible;
         transform: scale(1);
     }
-    .main-nav a {
-        margin: 0;
-        font-size: 1.8rem;
+    .main-nav a, .main-nav .selected-lang {
+        font-size: 1.5rem; /* Professional font size */
         font-weight: 600;
         color: var(--white);
-        padding: 1rem;
+        padding: 0.8rem 1rem; /* Tighter padding */
         transition: color 0.3s ease, transform 0.3s ease;
+        border: none; /* Remove border from language switcher */
+        background: none; /* Remove background from language switcher */
+        text-align: center;
+        width: auto;
+    }
+
+    .main-nav {
+        gap: 1rem; /* Reduced gap between items */
     }
     .main-nav a:hover {
         transform: scale(1.1);
         color: var(--accent-color);
     }
     .language-switcher {
-        margin-top: 1rem;
-        margin-left: 0;
-        width: 100%;
-        max-width: 280px; /* Match other links/buttons */
-        text-align: center;
+        margin: 0;
+        padding: 0;
+        width: auto;
     }
 
     .main-nav .selected-lang {
@@ -630,19 +635,26 @@ body.mobile-nav-open {
         background-color: rgba(255, 215, 0, 0.1);
     }
      .lang-dropdown {
-        position: relative; /* Change position for in-flow display */
-        top: auto;
-        right: auto;
-        transform: none;
-        width: 100%;
+        position: static; /* In-flow dropdown */
+        width: auto;
         margin-top: 0.5rem;
-        background: rgba(0,0,0,0.3); /* Dark, slightly transparent background */
+        background: none; /* No separate background */
         box-shadow: none;
-        border-radius: 15px;
+        border-radius: 0;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.4s ease;
+        transition: max-height 0.4s ease;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .lang-dropdown a {
+        font-size: 1.2rem; /* Smaller font for dropdown items */
+        padding: 0.5rem 1rem;
+        color: #ccc; /* Slightly dimmer color */
     }
 
     .language-switcher.open .lang-dropdown {
@@ -733,10 +745,13 @@ body.mobile-nav-open {
         font-size: 1rem;
     }
     .pizza-navigation {
-        width: 100%;
-        padding: 0 1rem;
-        max-width: 100%;
+        display: flex; /* This was missing */
+        flex-direction: row; /* Ensure horizontal layout */
         justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1rem;
     }
     .order-now-btn {
         padding: 0.7rem 1.2rem;
