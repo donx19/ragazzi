@@ -614,7 +614,7 @@ body.mobile-nav-open {
      .lang-dropdown {
         right: 50%;
         transform: translateX(50%);
-        background: #333;
+        background: #333; /* Use a solid background */
     }
      .lang-dropdown a {
         color: #fff;
@@ -728,7 +728,7 @@ body.mobile-nav-open {
         justify-content: flex-start; /* Align icon+text groups to the left */
     }
     .social-links {
-        justify-content: flex-start; /* Align social icons to the left */
+        justify-content: flex-start !important; /* Force left alignment for social icons */
     }
 }
 
