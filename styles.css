@@ -608,13 +608,46 @@ body.mobile-nav-open {
         color: var(--accent-color);
     }
     .language-switcher {
-        margin-top: 2rem;
+        margin-top: 1rem;
         margin-left: 0;
+        width: 100%;
+        max-width: 280px; /* Match other links/buttons */
+        text-align: center;
+    }
+
+    .main-nav .selected-lang {
+        padding: 1rem;
+        font-size: 1.5rem; /* Slightly smaller than nav links */
+        font-weight: 600;
+        border: 2px solid var(--accent-color);
+        border-radius: 50px;
+        background-color: transparent;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .main-nav .selected-lang:hover {
+        background-color: rgba(255, 215, 0, 0.1);
     }
      .lang-dropdown {
-        right: 50%;
-        transform: translateX(50%);
-        background: #333; /* Use a solid background */
+        position: relative; /* Change position for in-flow display */
+        top: auto;
+        right: auto;
+        transform: none;
+        width: 100%;
+        margin-top: 0.5rem;
+        background: rgba(0,0,0,0.3); /* Dark, slightly transparent background */
+        box-shadow: none;
+        border-radius: 15px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0;
+    }
+
+    .language-switcher.open .lang-dropdown {
+        max-height: 300px; /* Animate open */
+        padding: 0.5rem;
     }
      .lang-dropdown a {
         color: #fff;
