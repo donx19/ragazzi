@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // REVISED Mobile Nav Toggle
         mobileNavToggle.addEventListener('click', () => {
             const icon = mobileNavToggle.querySelector('i');
-            const isNavOpen = mainNav.classList.toggle('mobile-active');
+            const isNavOpen = mainNav.classList.toggle('mobile-open');
             document.body.classList.toggle('mobile-nav-open', isNavOpen);
             // Swap icon class
             if (isNavOpen) {
