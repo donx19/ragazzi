@@ -82,6 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // New Mobile Scroller Elements
     const categoryChips = document.querySelectorAll('.category-chip');
 
+    // --- EVENT LISTENERS ---
+    mobileNavToggle.addEventListener('click', () => {
+        mainNav.classList.toggle('mobile-active');
+        document.body.classList.toggle('mobile-nav-open');
+        const icon = mobileNavToggle.querySelector('i');
+        icon.className = mainNav.classList.contains('mobile-active') ? 'fas fa-times' : 'fas fa-bars';
+    });
+
 
     // --- LANGUAGE & TRANSLATION ---
     function setLanguage(lang) {
