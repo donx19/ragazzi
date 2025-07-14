@@ -722,7 +722,7 @@ body.mobile-nav-open {
         gap: 2.5rem;
     }
     .footer-section {
-        /* No special alignment needed, defaults to left */
+        text-align: left; /* Force left alignment */
     }
     .footer-section p {
         justify-content: flex-start; /* Align icon+text groups to the left */
