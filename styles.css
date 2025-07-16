@@ -136,6 +136,12 @@ body.mobile-nav-open { overflow: hidden; }
 .item-card p { padding: 0 1.5rem 1.5rem; color: #666; }
 .pizzaiolo-section { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .pizzaiolo-section img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; border: 5px solid var(--white); box-shadow: var(--shadow); }
+
+.pizzaiolo-section .title {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
 .community-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
 .community-gallery img, .about-hero-image { width: 100%; object-fit: cover; border-radius: 15px; box-shadow: var(--shadow); transition: var(--transition); }
 .community-gallery img { height: 250px; }
