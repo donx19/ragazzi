@@ -1,9 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://pizzeriaragazziskopje.com/</loc>
-    <lastmod>2025-07-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <!-- English URLs -->
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/home</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/about</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/pizza</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/baguette</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/pide</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/portion</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/tosta</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/burger</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/lahmacun</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/pizza-for-kids</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/en/menu/extras</loc></url>
+
+  <!-- Albanian URLs -->
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/home</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/about</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/pica</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/bageta</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/pide</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/porcione</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/tosta</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/burgera</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/lahmaxhun</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/pica-per-femije</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/sq/menu/shtesa</loc></url>
+
+  <!-- Macedonian URLs -->
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/home</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/about</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/pizza</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/baguette</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/pide</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/portion</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/tosta</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/burger</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/lahmacun</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/pizza-for-kids</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/mk/menu/extras</loc></url>
+
+  <!-- Turkish URLs -->
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/home</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/about</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/pizza</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/baget</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/pide</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/porsiyon</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/tost</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/burger</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/lahmacun</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/cocuk-pizzasi</loc></url>
+  <url><loc>https://pizzeriaragazziskopje.com/#/tr/menu/ekstralar</loc></url>
 </urlset>
