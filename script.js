@@ -290,26 +290,31 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('ragazziLang', lang);
 
         function applyLanguage() {
-            document.querySelectorAll('[data-lang], [data-lang-key]').forEach(el => {
-                const key = el.dataset.lang || el.dataset.langKey;
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-            
-            renderCurrentMenuItem(); 
+            try {
+                document.querySelectorAll('[data-lang], [data-lang-key]').forEach(el => {
+                    const key = el.dataset.lang || el.dataset.langKey;
+                    if (translations[lang] && translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+                document.documentElement.lang = lang;
+                
+                renderCurrentMenuItem(); 
 
-            const selectedLangAnchor = langDropdown.querySelector(`[data-lang-code="${lang}"]`);
-            if(selectedLangAnchor) {
-                selectedLangEl.querySelector('img').src = selectedLangAnchor.querySelector('img').src;
-                selectedLangEl.querySelector('span').textContent = selectedLangAnchor.textContent.trim();
+                const selectedLangAnchor = langDropdown.querySelector(`[data-lang-code="${lang}"]`);
+                if(selectedLangAnchor) {
+                    selectedLangEl.querySelector('img').src = selectedLangAnchor.querySelector('img').src;
+                    selectedLangEl.querySelector('span').textContent = selectedLangAnchor.textContent.trim();
+                }
+                
+                updateAllHrefs();
+                updateTitleAndMeta();
+            } catch(e) {
+                console.error('Language apply error:', e);
+            } finally {
+                document.body.classList.remove('lang-switching');
+                document.body.classList.add('lang-ready');
             }
-            
-            document.body.classList.remove('lang-switching');
-            document.body.classList.add('lang-ready');
-            updateAllHrefs(); // Update all links to use the new language
-            updateTitleAndMeta(); // Update title and meta description when language changes
         }
 
         if (isFirstLoad) {
@@ -739,11 +744,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIALIZATION ---
     function init() {
-        setupEventListeners();
-        preloadMenuImages(); // Preload all menu images into browser cache
-        handleUrlChange(); // Set initial state from URL on page load
-        updateAllHrefs(); // Set initial hrefs after language is determined
-        lazyLoadHeroImage(); // Start loading the high-quality image
+        try {
+            setupEventListeners();
+            preloadMenuImages();
+            handleUrlChange();
+            updateAllHrefs();
+            lazyLoadHeroImage();
+        } catch(e) {
+            console.error('Init error:', e);
+        } finally {
+            // Guarantee page is visible even if something fails
+            document.body.classList.add('lang-ready');
+        }
     }
 
     init();
