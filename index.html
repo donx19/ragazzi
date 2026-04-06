@@ -1,4 +1,4 @@
-<!DOCTYPE html>
++<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -30,7 +30,9 @@
             <nav class="main-nav">
                 <a href="#home" class="active" data-page="home-page" data-lang="home">Home</a>
                 <a href="#menu" data-page="menu-page" data-lang="menu">Menu</a>
-                <a href="#about" data-page="about-page" data-lang="about">About Us</a>
+                <a href="about.html" data-lang="about">About Us</a>
+            </nav>
+            <div class="header-actions">
                 <div class="language-switcher">
                     <div class="selected-lang">
                         <img src="https://flagcdn.com/gb.svg" alt="English Flag">
@@ -43,8 +45,8 @@
                         <a href="#" data-lang-code="tr"><img src="https://flagcdn.com/tr.svg" alt="Turkish Flag"> Turkish</a>
                     </div>
                 </div>
-            </nav>
-            <div class="mobile-nav-toggle"><i class="fas fa-bars"></i></div>
+                <div class="mobile-nav-toggle"><i class="fas fa-bars"></i></div>
+            </div>
         </div>
     </header>
 
@@ -62,7 +64,6 @@
                 <div class="container">
                     <h2 data-lang="fanFavorites">Our Fan Favorites</h2>
                     <div class="items-grid">
-                        <!-- MODIFICATION: Wrapped item-card divs in <a> tags -->
                         <a href="#" class="item-card" data-menu-target="PIZZA" data-item-target="PIZZA RAGAZZI">
                             <img src="https://i.imgur.com/6N3P5gn.png" alt="Pizza Ragazzi" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Ragazzi';">
                             <h3 data-lang="fanPizzaTitle">Pizza Ragazzi</h3>
@@ -87,7 +88,7 @@
                     <div class="about-preview-content">
                         <h2 data-lang="ourStory">Our Story</h2>
                         <p data-lang="ourStoryPreview">Founded on a passion for authentic flavors and community, Ragazzi has been serving up delicious moments since day one. We believe in quality you can taste, from our hand-tossed dough to our locally sourced ingredients.</p>
-                        <a href="#about" class="btn-secondary page-switcher" data-page="about-page" data-lang="learnMore">Learn More About Us</a>
+                        <a href="about.html" class="btn-secondary" data-lang="learnMore">Learn More About Us</a>
                     </div>
                 </div>
             </section>
@@ -145,42 +146,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about-page" class="page">
-            <div class="about-page">
-                <div class="container">
-                    <section class="about-section">
-                        <h1 data-lang="aboutTitle">The Heart of Ragazzi: A Story of Passion</h1>
-                        <img src="https://i.imgur.com/xi0bh5e.png" alt="Besar Elezi making pizza" class="about-hero-image" onerror="this.onerror=null;this.src='https://placehold.co/1200x500/e8e8e8/666?text=The+Art+of+Pizza';">
-                        <div class="about-text">
-                            <p data-lang="aboutIntro">Ragazzi Fastfood & Pizza was born from a simple yet powerful vision: to serve not just food, but an experience. At the center of this vision is our founder and head pizzaiolo, a young man whose love for pizza is matched only by his dedication to his craft. Every pizza that comes out of our oven is a piece of his story, a story that we are proud to share with you.</p>
-                        </div>
-                    </section>
-    
-                    <section class="about-section">
-                        <h2 data-lang="meetPizzaiolo">Meet the Pizzaiolo</h2>
-                        <div class="pizzaiolo-section">
-                            <img src="https://i.imgur.com/O9GKi3A.png" alt="Besar Elezi" onerror="this.onerror=null;this.src='https://placehold.co/300x300/e8e8e8/666?text=Besar+Elezi';">
-                            <h3>Besar Elezi</h3>
-                            <p class="title" data-lang="pizzaioloTitle">Founder & Head Pizzaiolo</p>
-                            <p data-lang="pizzaioloBio">Besar is a young and talented artist whose canvas is dough and whose paints are the freshest ingredients. His journey began in the vibrant culinary scene of Berlin, where he didn't just learn to make pizza—he learned to understand it. He forged his skills under the guidance of masters, discovering the secrets to the perfect crust and the most harmonious flavor combinations. For Besar, this was more than a job; it was the discovery of a lifelong passion. He brought that fire back home, and with it, a dream to create a place where every slice tells a story of dedication, quality, and the pure love of food.</p>
-                        </div>
-                    </section>
-
-                    <section class="about-section">
-                        <h2 data-lang="communityTitle">More Than Pizza: A Commitment to Community</h2>
-                        <div class="about-text">
-                           <p data-lang="communityDesc">Besar believes that a restaurant should be a cornerstone of its community. His passion extends beyond the kitchen and into the hearts of those around him, especially the younger generation. He has a strong connection with kids and frequently shares his craft with local elementary schools. These events are more than just pizza parties; they are vibrant, hands-on lessons in the joy of creation. By teaching children how to make their own pizzas, Besar brings smiles and laughter, showing them that learning can be delicious and that school is a place for fun, friendship, and happy memories.</p>
-                        </div>
-                        <div class="community-gallery">
-                            <img src="https://i.imgur.com/cgUphZ9.png" alt="Besar with school children" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Community+Event';">
-                            <img src="https://i.imgur.com/gWhzV1w.png" alt="Children enjoying pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Happy+Kids';">
-                            <img src="https://i.imgur.com/lslG76N.png" alt="Besar teaching kids to make pizza" onerror="this.onerror=null;this.src='https://placehold.co/400x250/ccc/fff?text=Pizza+Class';">
-                        </div>
-                    </section>
                 </div>
             </div>
         </section>
