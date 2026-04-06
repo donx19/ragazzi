@@ -577,11 +577,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const speed = 0.02; // pixels per millisecond (~1.2px per frame at 60fps)
 
         function autoScroll(timestamp) {
-            if (lastTime === 0) lastTime = timestamp;
+            if (lastTime === 0) {
+                lastTime = timestamp;
+                rafId = requestAnimationFrame(autoScroll);
+                return;
+            }
             const delta = timestamp - lastTime;
             lastTime = timestamp;
 
-            if (!isPaused && delta < 100) { // skip large gaps (tab switch etc)
+            if (!isPaused && delta < 100) {
                 scroller.scrollLeft += speed * delta;
                 const halfWidth = scroller.scrollWidth / 2;
                 if (scroller.scrollLeft >= halfWidth) {
