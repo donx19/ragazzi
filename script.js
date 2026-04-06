@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const parts = hash.split('/').filter(p => p); // Filter out empty strings like in #/home/
 
         // Default values
-        let lang = 'en';
+        let lang = localStorage.getItem('ragazziLang') || 'sq';
         let pageKey = 'home';
         let menuKey = null;
         let itemSlug = null;
@@ -286,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentLang === lang && !document.body.classList.contains('lang-switching')) return;
         
         currentLang = lang;
+        localStorage.setItem('ragazziLang', lang);
         document.body.classList.add('lang-switching');
 
         setTimeout(() => {
