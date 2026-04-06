@@ -147,7 +147,8 @@
 
     <script>
         if (!window.location.hash) {
-            window.location.hash = '#en/about';
+            var savedLang = localStorage.getItem('ragazziLang') || 'sq';
+            window.location.hash = '#' + savedLang + '/about';
         }
     </script>
     <script src="script.js"></script>
