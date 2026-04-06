@@ -285,11 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLanguage(lang) {
         if (currentLang === lang && !document.body.classList.contains('lang-switching')) return;
         
+        const isFirstLoad = currentLang === '';
         currentLang = lang;
         localStorage.setItem('ragazziLang', lang);
-        document.body.classList.add('lang-switching');
 
-        setTimeout(() => {
+        function applyLanguage() {
             document.querySelectorAll('[data-lang], [data-lang-key]').forEach(el => {
                 const key = el.dataset.lang || el.dataset.langKey;
                 if (translations[lang] && translations[lang][key]) {
@@ -307,9 +307,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             document.body.classList.remove('lang-switching');
+            document.body.classList.add('lang-ready');
             updateAllHrefs(); // Update all links to use the new language
             updateTitleAndMeta(); // Update title and meta description when language changes
-        }, 300);
+        }
+
+        if (isFirstLoad) {
+            applyLanguage();
+        } else {
+            document.body.classList.add('lang-switching');
+            setTimeout(applyLanguage, 300);
+        }
     }
 
     /**
