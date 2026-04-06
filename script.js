@@ -607,24 +607,62 @@ document.addEventListener('DOMContentLoaded', () => {
         document.head.appendChild(style);
 
         let resumeTimer = null;
+        let touchStartX = 0;
+        let trackOffset = 0;
+        let isDragging = false;
 
-        function pause() {
+        function getCurrentTranslateX() {
+            const style = window.getComputedStyle(track);
+            const matrix = new DOMMatrix(style.transform);
+            return matrix.m41;
+        }
+
+        function onTouchStart(e) {
+            isDragging = true;
+            touchStartX = e.touches[0].clientX;
+            trackOffset = getCurrentTranslateX();
             track.classList.add('paused');
+            track.style.animation = 'none';
+            track.style.transform = `translateX(${trackOffset}px)`;
             if (resumeTimer) clearTimeout(resumeTimer);
         }
 
-        function resume() {
+        function onTouchMove(e) {
+            if (!isDragging) return;
+            const dx = e.touches[0].clientX - touchStartX;
+            let newX = trackOffset + dx;
+            // Wrap around seamlessly
+            if (newX > 0) newX -= originalWidth;
+            if (newX < -originalWidth) newX += originalWidth;
+            track.style.transform = `translateX(${newX}px)`;
+        }
+
+        function onTouchEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            const currentX = getCurrentTranslateX();
+            // Calculate where in the animation cycle we are (0 to 1)
+            let progress = -currentX / originalWidth;
+            progress = progress - Math.floor(progress); // normalize 0-1
+            // Resume CSS animation from this point using negative delay
+            track.style.animation = '';
+            track.style.transform = '';
+            track.style.animationDelay = `-${progress * duration}s`;
+            track.classList.add('paused');
             if (resumeTimer) clearTimeout(resumeTimer);
             resumeTimer = setTimeout(() => { track.classList.remove('paused'); }, 2000);
         }
 
-        // Touch & mouse events
-        scroller.addEventListener('touchstart', pause, { passive: true });
-        scroller.addEventListener('touchend', resume, { passive: true });
-        scroller.addEventListener('touchcancel', resume, { passive: true });
-        scroller.addEventListener('mousedown', pause);
-        scroller.addEventListener('mouseup', resume);
-        scroller.addEventListener('mouseleave', resume);
+        // Touch events for drag + pause/resume
+        scroller.addEventListener('touchstart', onTouchStart, { passive: true });
+        scroller.addEventListener('touchmove', onTouchMove, { passive: true });
+        scroller.addEventListener('touchend', onTouchEnd, { passive: true });
+        scroller.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+        // Mouse: just pause/resume
+        scroller.addEventListener('mousedown', () => { track.classList.add('paused'); if (resumeTimer) clearTimeout(resumeTimer); });
+        scroller.addEventListener('mouseup', () => { if (resumeTimer) clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { track.classList.remove('paused'); }, 2000); });
+        scroller.addEventListener('mouseleave', () => { if (resumeTimer) clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { track.classList.remove('paused'); }, 2000); });
     }
 
     function waitForImageLoad(imgEl) {
