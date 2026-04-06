@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
     translations.sq.fcShkupiParagraph2 = "Kjo mbështetje u jep lojtarëve pajisjet që u nevojiten, por gjithashtu dërgon një mesazh të qartë: komuniteti lokal qëndron pas ekipit të vet. Siç thotë Besari, çdo qytetar duhet të mbështesë klubin e qytetit të tij. Kontributi i tij nuk është vetëm ndihmë financiare, por edhe shenjë besimi, motivimi dhe uniteti për FC Shkupin, stafin dhe tifozët besnikë.";
     translations.sq.fcShkupiVideoTitle = "Shikoni momentet e mbështetjes";
 
+    translations.mk.menu_cat_pizza = "ПИЦА";
+    translations.mk.menu_cat_baguette = "БАГЕТ";
+    translations.mk.menu_cat_pide = "ПИДЕ";
+    translations.mk.menu_cat_portion = "ПОРЦИЈА";
+    translations.mk.menu_cat_tosta = "ТОСТ";
+    translations.mk.menu_cat_burger = "БУРГЕР";
+    translations.mk.menu_cat_lahmacun = "ЛАХМАЏУН";
+    translations.mk.menu_cat_pizza_for_kids = "ПИЦА ЗА ДЕЦА";
+    translations.mk.menu_cat_extras = "ЕКСТРА";
+
     translations.mk.fcShkupiTitle = "Го поддржува омилениот тим: ФК Шкупи";
     translations.mk.fcShkupiParagraph1 = "ФК Шкупи се натпреварува во Првата македонска лига и минува низ тешка сезона, и на теренот и надвор од него. За да му помогне на клубот да остане силен во зимскиот период, Ragazzi Fastfood & Pizza, предводен од Бесар Елезии, ги спонзорираше зимските тренинг-опреми на тимот.";
     translations.mk.fcShkupiParagraph2 = "Оваа поддршка им ја обезбедува потребната опрема на фудбалерите, но испраќа и јасна порака: локалната заедница застанува зад својот клуб. Како што вели Бесар, секој што живее во градот треба да го поддржи својот тим. Неговиот придонес не е само финансиска помош, туку и знак на вера, мотивација и единство за ФК Шкупи, стручниот штаб и верните навивачи.";
@@ -360,6 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
         menuNavLinks.forEach(link => {
             link.classList.toggle('active', link.dataset.menu === newMenuKey);
         });
+        // Also update dynamically cloned chips
+        document.querySelectorAll('.cloned-chip').forEach(clone => {
+            clone.classList.toggle('active', clone.dataset.menu === newMenuKey);
+        });
 
         if(pizzaDisplay) pizzaDisplay.classList.add('is-navigating');
         await new Promise(resolve => setTimeout(resolve, 400));
@@ -533,6 +547,68 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
+    }
+
+    function initCategoryAutoScroll() {
+        const scroller = document.querySelector('.category-scroller');
+        if (!scroller) return;
+
+        // Duplicate chips for seamless loop
+        const chips = Array.from(scroller.children);
+        chips.forEach(chip => {
+            const clone = chip.cloneNode(true);
+            clone.classList.add('cloned-chip');
+            scroller.appendChild(clone);
+        });
+
+        // Attach click listeners to cloned chips too
+        scroller.querySelectorAll('.cloned-chip').forEach(clone => {
+            clone.addEventListener('click', (e) => {
+                e.preventDefault();
+                const menuKey = clone.dataset.menu;
+                if (menuKey) switchMenuCategory(menuKey);
+            });
+        });
+
+        let scrollSpeed = 0.5; // pixels per frame
+        let isPaused = false;
+        let resumeTimer = null;
+        let rafId = null;
+
+        function autoScroll() {
+            if (!isPaused) {
+                scroller.scrollLeft += scrollSpeed;
+                // When we've scrolled past the original set, reset seamlessly
+                const halfScroll = scroller.scrollWidth / 2;
+                if (scroller.scrollLeft >= halfScroll) {
+                    scroller.scrollLeft -= halfScroll;
+                }
+            }
+            rafId = requestAnimationFrame(autoScroll);
+        }
+
+        function pauseScroll() {
+            isPaused = true;
+            if (resumeTimer) clearTimeout(resumeTimer);
+        }
+
+        function scheduleResume() {
+            if (resumeTimer) clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(() => { isPaused = false; }, 2000);
+        }
+
+        // Touch events
+        scroller.addEventListener('touchstart', pauseScroll, { passive: true });
+        scroller.addEventListener('touchend', scheduleResume, { passive: true });
+        scroller.addEventListener('touchcancel', scheduleResume, { passive: true });
+
+        // Mouse events (for desktop testing)
+        scroller.addEventListener('mousedown', pauseScroll);
+        scroller.addEventListener('mouseup', scheduleResume);
+        scroller.addEventListener('mouseleave', scheduleResume);
+
+        // Start auto-scrolling
+        rafId = requestAnimationFrame(autoScroll);
     }
 
     function waitForImageLoad(imgEl) {
@@ -749,6 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
             preloadMenuImages();
             handleUrlChange();
             updateAllHrefs();
+            initCategoryAutoScroll();
             lazyLoadHeroImage();
         } catch(e) {
             console.error('Init error:', e);
