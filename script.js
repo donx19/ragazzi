@@ -550,25 +550,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initCategoryAutoScroll() {
-        const container = document.querySelector('.category-scroller');
-        if (!container) return;
+        const scroller = document.querySelector('.category-scroller');
+        if (!scroller) return;
 
-        // Create inner track and move chips into it
-        const track = document.createElement('div');
-        track.className = 'category-track';
-        const chips = Array.from(container.children);
-        chips.forEach(chip => track.appendChild(chip));
-        container.appendChild(track);
-
-        // Duplicate all chips for seamless loop
+        // Duplicate chips directly in the scroller for seamless loop
+        const chips = Array.from(scroller.children);
         chips.forEach(chip => {
             const clone = chip.cloneNode(true);
             clone.classList.add('cloned-chip');
-            track.appendChild(clone);
+            scroller.appendChild(clone);
         });
 
         // Attach click listeners to cloned chips
-        track.querySelectorAll('.cloned-chip').forEach(clone => {
+        scroller.querySelectorAll('.cloned-chip').forEach(clone => {
             clone.addEventListener('click', (e) => {
                 e.preventDefault();
                 const menuKey = clone.dataset.menu;
@@ -576,50 +570,50 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Inject CSS animation dynamically (duration based on content width)
-        requestAnimationFrame(() => {
-            const halfWidth = track.scrollWidth / 2;
-            const duration = halfWidth / 30; // ~30px per second
-            const styleEl = document.createElement('style');
-            styleEl.textContent = `
-                @keyframes categoryMarquee {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-${halfWidth}px); }
-                }
-                .category-track {
-                    display: flex;
-                    gap: 0.75rem;
-                    animation: categoryMarquee ${duration}s linear infinite;
-                    will-change: transform;
-                }
-                .category-track.paused {
-                    animation-play-state: paused;
-                }
-            `;
-            document.head.appendChild(styleEl);
-        });
-
+        let isPaused = false;
         let resumeTimer = null;
+        let scrollInterval = null;
+
+        function getHalfWidth() {
+            // Half the scroll width = width of original chips set
+            return scroller.scrollWidth / 2;
+        }
+
+        function startAutoScroll() {
+            if (scrollInterval) return;
+            scrollInterval = setInterval(() => {
+                if (!isPaused) {
+                    scroller.scrollLeft += 1;
+                    // Seamless loop: reset when past the original set
+                    if (scroller.scrollLeft >= getHalfWidth()) {
+                        scroller.scrollLeft = 0;
+                    }
+                }
+            }, 20);
+        }
 
         function pauseScroll() {
-            track.classList.add('paused');
+            isPaused = true;
             if (resumeTimer) clearTimeout(resumeTimer);
         }
 
         function scheduleResume() {
             if (resumeTimer) clearTimeout(resumeTimer);
-            resumeTimer = setTimeout(() => { track.classList.remove('paused'); }, 2000);
+            resumeTimer = setTimeout(() => { isPaused = false; }, 2000);
         }
 
-        // Touch events (iOS)
-        container.addEventListener('touchstart', pauseScroll, { passive: true });
-        container.addEventListener('touchend', scheduleResume, { passive: true });
-        container.addEventListener('touchcancel', scheduleResume, { passive: true });
+        // Touch: pause auto-scroll, let native scroll handle finger movement
+        scroller.addEventListener('touchstart', pauseScroll, { passive: true });
+        scroller.addEventListener('touchend', scheduleResume, { passive: true });
+        scroller.addEventListener('touchcancel', scheduleResume, { passive: true });
 
-        // Mouse events (desktop)
-        container.addEventListener('mousedown', pauseScroll);
-        container.addEventListener('mouseup', scheduleResume);
-        container.addEventListener('mouseleave', scheduleResume);
+        // Mouse: pause on drag, resume on release
+        scroller.addEventListener('mousedown', pauseScroll);
+        scroller.addEventListener('mouseup', scheduleResume);
+        scroller.addEventListener('mouseleave', scheduleResume);
+
+        // Start after a short delay to ensure layout is ready
+        setTimeout(startAutoScroll, 500);
     }
 
     function waitForImageLoad(imgEl) {
