@@ -339,6 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * Shows the correct page section.
      * @param {string} pageId - The ID of the page element to make active.
      */
+    let categoryScrollerStarted = false;
+
     function switchPage(pageId) {
         pages.forEach(page => page.classList.remove('active'));
         const newPage = document.getElementById(pageId);
@@ -355,6 +357,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mainNav.classList.remove('mobile-open');
             document.body.classList.remove('mobile-nav-open');
             mobileNavToggle.querySelector('i').className = 'fas fa-bars';
+        }
+
+        // Start auto-scroll when menu page first becomes visible
+        if (pageId === 'menu-page' && !categoryScrollerStarted) {
+            categoryScrollerStarted = true;
+            setTimeout(initCategoryAutoScroll, 100);
         }
     }
     
@@ -572,27 +580,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let isPaused = false;
         let resumeTimer = null;
-        let rafId = null;
-        let lastTime = 0;
-        const speed = 0.02; // pixels per millisecond (~1.2px per frame at 60fps)
 
-        function autoScroll(timestamp) {
-            if (lastTime === 0) {
-                lastTime = timestamp;
-                rafId = requestAnimationFrame(autoScroll);
-                return;
-            }
-            const delta = timestamp - lastTime;
-            lastTime = timestamp;
-
-            if (!isPaused && delta < 100) {
-                scroller.scrollLeft += speed * delta;
-                const halfWidth = scroller.scrollWidth / 2;
-                if (scroller.scrollLeft >= halfWidth) {
-                    scroller.scrollLeft -= halfWidth;
+        function startAutoScroll() {
+            setInterval(() => {
+                if (!isPaused) {
+                    scroller.scrollLeft += 0.5;
+                    const halfWidth = scroller.scrollWidth / 2;
+                    if (scroller.scrollLeft >= halfWidth) {
+                        scroller.scrollLeft = 0;
+                    }
                 }
-            }
-            rafId = requestAnimationFrame(autoScroll);
+            }, 30);
         }
 
         function pauseScroll() {
@@ -615,8 +613,8 @@ document.addEventListener('DOMContentLoaded', () => {
         scroller.addEventListener('mouseup', scheduleResume);
         scroller.addEventListener('mouseleave', scheduleResume);
 
-        // Start after a short delay to ensure layout is ready
-        setTimeout(() => { rafId = requestAnimationFrame(autoScroll); }, 500);
+        // Start scrolling
+        startAutoScroll();
     }
 
     function waitForImageLoad(imgEl) {
@@ -831,7 +829,6 @@ document.addEventListener('DOMContentLoaded', () => {
             preloadMenuImages();
             handleUrlChange();
             updateAllHrefs();
-            initCategoryAutoScroll();
             lazyLoadHeroImage();
         } catch(e) {
             console.error('Init error:', e);
