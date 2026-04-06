@@ -572,24 +572,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let isPaused = false;
         let resumeTimer = null;
-        let scrollInterval = null;
+        let rafId = null;
+        let lastTime = 0;
+        const speed = 0.02; // pixels per millisecond (~1.2px per frame at 60fps)
 
-        function getHalfWidth() {
-            // Half the scroll width = width of original chips set
-            return scroller.scrollWidth / 2;
-        }
+        function autoScroll(timestamp) {
+            if (lastTime === 0) lastTime = timestamp;
+            const delta = timestamp - lastTime;
+            lastTime = timestamp;
 
-        function startAutoScroll() {
-            if (scrollInterval) return;
-            scrollInterval = setInterval(() => {
-                if (!isPaused) {
-                    scroller.scrollLeft += 1;
-                    // Seamless loop: reset when past the original set
-                    if (scroller.scrollLeft >= getHalfWidth()) {
-                        scroller.scrollLeft = 0;
-                    }
+            if (!isPaused && delta < 100) { // skip large gaps (tab switch etc)
+                scroller.scrollLeft += speed * delta;
+                const halfWidth = scroller.scrollWidth / 2;
+                if (scroller.scrollLeft >= halfWidth) {
+                    scroller.scrollLeft -= halfWidth;
                 }
-            }, 20);
+            }
+            rafId = requestAnimationFrame(autoScroll);
         }
 
         function pauseScroll() {
@@ -613,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scroller.addEventListener('mouseleave', scheduleResume);
 
         // Start after a short delay to ensure layout is ready
-        setTimeout(startAutoScroll, 500);
+        setTimeout(() => { rafId = requestAnimationFrame(autoScroll); }, 500);
     }
 
     function waitForImageLoad(imgEl) {
