@@ -561,16 +561,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const scroller = document.querySelector('.category-scroller');
         if (!scroller) return;
 
-        // Duplicate chips directly in the scroller for seamless loop
+        // Create inner track wrapper
+        const track = document.createElement('div');
+        track.className = 'category-track';
         const chips = Array.from(scroller.children);
+        chips.forEach(chip => track.appendChild(chip));
+        scroller.appendChild(track);
+
+        // Duplicate chips for seamless loop
         chips.forEach(chip => {
             const clone = chip.cloneNode(true);
             clone.classList.add('cloned-chip');
-            scroller.appendChild(clone);
+            track.appendChild(clone);
         });
 
         // Attach click listeners to cloned chips
-        scroller.querySelectorAll('.cloned-chip').forEach(clone => {
+        track.querySelectorAll('.cloned-chip').forEach(clone => {
             clone.addEventListener('click', (e) => {
                 e.preventDefault();
                 const menuKey = clone.dataset.menu;
@@ -578,43 +584,47 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        let isPaused = false;
+        // Measure and inject CSS animation
+        const originalWidth = chips.reduce((sum, chip) => {
+            return sum + chip.offsetWidth + 12; // 12 = gap (0.75rem)
+        }, 0);
+        const duration = originalWidth / 20; // 20px/sec — gentle pace
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .category-track {
+                display: flex;
+                gap: 0.75rem;
+                will-change: transform;
+                animation: catScroll ${duration}s linear infinite;
+            }
+            .category-track.paused { animation-play-state: paused; }
+            @keyframes catScroll {
+                from { transform: translateX(0); }
+                to { transform: translateX(-${originalWidth}px); }
+            }
+        `;
+        document.head.appendChild(style);
+
         let resumeTimer = null;
 
-        function startAutoScroll() {
-            setInterval(() => {
-                if (!isPaused) {
-                    scroller.scrollLeft += 1;
-                    const halfWidth = scroller.scrollWidth / 2;
-                    if (scroller.scrollLeft >= halfWidth) {
-                        scroller.scrollLeft = 0;
-                    }
-                }
-            }, 50);
-        }
-
-        function pauseScroll() {
-            isPaused = true;
+        function pause() {
+            track.classList.add('paused');
             if (resumeTimer) clearTimeout(resumeTimer);
         }
 
-        function scheduleResume() {
+        function resume() {
             if (resumeTimer) clearTimeout(resumeTimer);
-            resumeTimer = setTimeout(() => { isPaused = false; }, 2000);
+            resumeTimer = setTimeout(() => { track.classList.remove('paused'); }, 2000);
         }
 
-        // Touch: pause auto-scroll, let native scroll handle finger movement
-        scroller.addEventListener('touchstart', pauseScroll, { passive: true });
-        scroller.addEventListener('touchend', scheduleResume, { passive: true });
-        scroller.addEventListener('touchcancel', scheduleResume, { passive: true });
-
-        // Mouse: pause on drag, resume on release
-        scroller.addEventListener('mousedown', pauseScroll);
-        scroller.addEventListener('mouseup', scheduleResume);
-        scroller.addEventListener('mouseleave', scheduleResume);
-
-        // Start scrolling
-        startAutoScroll();
+        // Touch & mouse events
+        scroller.addEventListener('touchstart', pause, { passive: true });
+        scroller.addEventListener('touchend', resume, { passive: true });
+        scroller.addEventListener('touchcancel', resume, { passive: true });
+        scroller.addEventListener('mousedown', pause);
+        scroller.addEventListener('mouseup', resume);
+        scroller.addEventListener('mouseleave', resume);
     }
 
     function waitForImageLoad(imgEl) {
