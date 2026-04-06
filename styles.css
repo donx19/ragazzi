@@ -354,7 +354,7 @@ a.item-card {
     }
     .category-scroller { display: flex; overflow-x: auto; scrollbar-width: none; padding: 0.5rem 1rem; gap: 0.75rem; }
     .category-scroller::-webkit-scrollbar { display: none; }
-    .category-chip { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-radius: 50px; background: rgba(0,0,0,0.2); color: var(--white); font-size: 1rem; text-decoration: none; white-space: nowrap; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+    .category-chip { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-radius: 50px; background: rgba(0,0,0,0.2); color: var(--white); font-size: 1rem; text-decoration: none; white-space: nowrap; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
     .category-chip.active, .category-chip:hover { background: var(--accent-color); color: #000; transform: translateY(-2px); border-color: var(--accent-color); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
     /* Mobile Pizza Display */
