@@ -584,13 +584,13 @@ document.addEventListener('DOMContentLoaded', () => {
         function startAutoScroll() {
             setInterval(() => {
                 if (!isPaused) {
-                    scroller.scrollLeft += 0.5;
+                    scroller.scrollLeft += 1;
                     const halfWidth = scroller.scrollWidth / 2;
                     if (scroller.scrollLeft >= halfWidth) {
                         scroller.scrollLeft = 0;
                     }
                 }
-            }, 30);
+            }, 50);
         }
 
         function pauseScroll() {
