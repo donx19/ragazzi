@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentItemIndex = 0;
     let selectedSize = 'small';
     let animationInProgress = false;
-    let currentLang = 'en';
+    let currentLang = '';
     let selectedItemForOrder = '';
 
     // --- DOM ELEMENT SELECTORS ---
@@ -378,6 +378,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const menu = slugify(link.dataset.menuTarget);
             const item = slugify(link.dataset.itemTarget);
             link.href = `#${currentLang}/menu/${menu}/${item}`;
+        });
+
+        // Cross-page links (e.g., about.html → index.html)
+        document.querySelectorAll('.main-nav a[href^="index.html"]').forEach(link => {
+            const langKey = link.dataset.lang;
+            if (langKey) {
+                link.href = `index.html#${currentLang}/${langKey}`;
+            }
         });
     }
 
@@ -725,8 +733,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         setupEventListeners();
         preloadMenuImages(); // Preload all menu images into browser cache
-        updateAllHrefs(); // Set initial hrefs for all links
         handleUrlChange(); // Set initial state from URL on page load
+        updateAllHrefs(); // Set initial hrefs after language is determined
         lazyLoadHeroImage(); // Start loading the high-quality image
     }
 
