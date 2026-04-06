@@ -240,7 +240,7 @@ a.item-card {
     padding: 0 1rem;
 }
 .nav-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: var(--white); width: 55px; height: 55px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; padding: 1rem; line-height: 1; }
-.order-now-btn { background: var(--accent-color); color: var(--text-color); border: none; padding: 1rem 3rem; font-size: 1.1rem; font-weight: 800; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; white-space: nowrap; min-width: 180px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
+.order-now-btn { background: var(--accent-color); color: var(--text-color); border: none; padding: 1rem 2rem; font-size: 1.1rem; font-weight: 800; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; white-space: nowrap; flex: 1; max-width: 300px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
 .nav-btn:hover { background: rgba(255,215,0,0.2); }
 .order-now-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
 .pizza-image-container, .pizza-info, .ingredients { transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
@@ -367,7 +367,7 @@ a.item-card {
     .pizza-description { font-size: 0.95rem; white-space: normal; } /* Allow wrapping on small screens */
     .pizza-navigation { justify-content: center; gap: 1rem; padding: 0 1rem; }
     .nav-btn { width: 45px; height: 45px; font-size: 1rem; }
-    .order-now-btn { padding: 0.8rem 2rem; font-size: 1rem; font-weight: 800; flex-grow: 0; }
+    .order-now-btn { padding: 0.8rem 1.5rem; font-size: 1rem; font-weight: 800; flex: 1; max-width: 280px; }
     
     /* Mobile Footer */
     .footer-content { text-align: left; }
