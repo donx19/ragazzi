@@ -602,9 +602,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Measure exact width by finding position of first clone
-        const firstClone = track.querySelector('.cloned-chip');
-        const originalWidth = firstClone.offsetLeft;
+        // Measure and inject CSS animation
+        const originalWidth = chips.reduce((sum, chip) => {
+            return sum + chip.offsetWidth + 12; // 12 = gap (0.75rem)
+        }, 0);
         const duration = originalWidth / 20; // 20px/sec — gentle pace
 
         const style = document.createElement('style');
