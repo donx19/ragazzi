@@ -272,6 +272,53 @@ document.addEventListener('DOMContentLoaded', () => {
         setMeta('meta[name="twitter:title"]', 'content', document.title);
         setMeta('meta[name="twitter:description"]', 'content', metaDescription.content);
         setMeta('meta[name="twitter:image"]', 'content', shareImage);
+
+        // Dynamically manage hreflang alternates for the current route
+        try {
+            // Remove any pre-existing alternates to avoid duplicates
+            document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
+
+            const supportedLangs = ['sq', 'en', 'mk', 'tr'];
+            const origin = window.location.origin;
+
+            let path = window.location.pathname.replace(/\/index\.html$/, '/');
+            path = path.replace(/\/+$/g, '/').replace(/^\/+/, '/');
+            const parts = path.split('/').filter(Boolean);
+
+            let page = 'home';
+            let rest = [];
+            if (parts.length === 0) {
+                // leave defaults
+            } else if (supportedLangs.includes(parts[0])) {
+                page = parts[1] || 'home';
+                rest = parts.slice(2);
+            } else {
+                page = parts[0] || 'home';
+                rest = parts.slice(1);
+            }
+
+            const isAbout = page === 'about' || /\/about\.html$/.test(path);
+            if (!isAbout) {
+                const restPath = [page, ...rest].filter(Boolean).join('/');
+
+                supportedLangs.forEach(l => {
+                    const href = `${origin}/${l}/${restPath || 'home'}`;
+                    const link = document.createElement('link');
+                    link.rel = 'alternate';
+                    link.hreflang = l;
+                    link.href = href;
+                    document.head.appendChild(link);
+                });
+
+                const xdef = document.createElement('link');
+                xdef.rel = 'alternate';
+                xdef.hreflang = 'x-default';
+                xdef.href = `${origin}/sq/${([page, ...rest].filter(Boolean).join('/') || 'home')}`;
+                document.head.appendChild(xdef);
+            }
+        } catch (e) {
+            // no-op: do not block page if anything goes wrong
+        }
     }
 
     function handleUrlChange() {
@@ -317,6 +364,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     itemSlug = parts[2] || null;
                 }
             }
+        }
+
+        // Normalize about.html to about for SPA section IDs
+        if (pageKey === 'about.html') {
+            pageKey = 'about';
         }
 
         // Apply state
@@ -401,6 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPage = document.getElementById(pageId);
         if (newPage) {
             newPage.classList.add('active');
+        } else {
+            // Safe fallback to avoid blank screen if a wrong pageId is computed
+            const fallback = document.getElementById('home-page') || document.getElementById('about-page') || pages[0];
+            if (fallback) fallback.classList.add('active');
         }
 
         document.querySelectorAll('.main-nav a[data-page]').forEach(link => {
@@ -551,7 +607,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         rest = parts.slice(1);
                     }
 
-                    const newPath = page === 'about'
+                    const isAbout = page === 'about' || page === 'about.html' || /(?:^|\/)about\.html$/.test(path);
+                    const newPath = isAbout
                         ? 'about.html'
                         : `/${newLang}/${[page, ...rest].filter(Boolean).join('/')}`;
 
@@ -938,6 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // MODIFICATION: Added lazy loading for the hero image
     function lazyLoadHeroImage() {
+        const heroSection = document.querySelector('.hero-section, .hero');
         if (!heroSection) return;
         const highQualityImage = new Image();
         highQualityImage.src = 'https://www.pngall.com/wp-content/uploads/2017/01/Albanian-Eagle-PNG-Image.png';
@@ -946,20 +1004,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
     
-    // MODIFICATION: New function to update page title for SEO
-    function updateTitleAndMeta(pageKey, menuKey) {
-        const baseTitle = "RAGAZZI FASTFOOD & PIZZA";
-        let newTitle = baseTitle;
-
-        if (pageKey === 'menu') {
-            const menuName = translations[currentLang][`menu_cat_${slugify(menuKey)}`] || menuKey;
-            newTitle = `${menuName} Menu - ${baseTitle}`;
-        } else if (pageKey === 'about') {
-            newTitle = `About Us - ${baseTitle}`;
-        }
-        
-        document.title = newTitle;
-    }
+    // (Removed duplicate lightweight updateTitleAndMeta; the comprehensive version above remains authoritative)
 
 
     // --- INITIALIZATION ---
