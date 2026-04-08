@@ -1,4 +1,8 @@
 / /sq/home 301!
 /about /about.html 301!
+/sq/about /about.html 301!
+/:lang/about /about.html 301!
+/sq/about.html /about.html 301!
+/:lang/about.html /about.html 301!
 /about.html /about.html 200
 /* /index.html 200
