@@ -216,11 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let title = siteName;
         let description = 'Delicious food made with passion. Authentic recipes, fresh ingredients, and a love for great food.';
 
+        let shareImage = 'https://i.imgur.com/YSLS4Pp.png';
         if (pageKey === 'menu' && menuData[activeMenuKey]?.items?.[currentItemIndex]) {
             const item = menuData[activeMenuKey].items[currentItemIndex];
             const itemName = translations[currentLang]?.[item.nameKey] || item.name;
             const menuCategory = translations[currentLang]?.[`menu_cat_${activeMenuKey.toLowerCase()}`] || activeMenuKey;
-            
+            // Try to get image from menuCardData
+            const cardInfo = menuCardData[activeMenuKey]?.items?.find(ci => ci.name === item.name);
+            if (cardInfo?.image) shareImage = cardInfo.image;
+
             title = `${itemName} | ${menuCategory} | ${siteName}`;
             description = translations[currentLang]?.[item.descriptionKey] || description;
         } else if (pageKey === 'about') {
@@ -241,24 +245,63 @@ document.addEventListener('DOMContentLoaded', () => {
             document.head.appendChild(metaDescription);
         }
         metaDescription.content = description;
+
+        // Update canonical
+        const canonicalHref = window.location.origin + window.location.pathname;
+        let canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (!canonicalLink) {
+            canonicalLink = document.createElement('link');
+            canonicalLink.rel = 'canonical';
+            document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.href = canonicalHref;
+
+        // Update og:url if present
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute('content', canonicalHref);
+
+        // Update OG/Twitter title/description/image if present
+        const setMeta = (selector, attr, value) => {
+            let el = document.querySelector(selector);
+            if (!el) return;
+            el.setAttribute(attr, value);
+        };
+        setMeta('meta[property="og:title"]', 'content', document.title);
+        setMeta('meta[property="og:description"]', 'content', metaDescription.content);
+        setMeta('meta[property="og:image"]', 'content', shareImage);
+        setMeta('meta[name="twitter:title"]', 'content', document.title);
+        setMeta('meta[name="twitter:description"]', 'content', metaDescription.content);
+        setMeta('meta[name="twitter:image"]', 'content', shareImage);
     }
 
     function handleUrlChange() {
-        const hash = window.location.hash.substring(1);
-        const parts = hash.split('/').filter(p => p); // Filter out empty strings like in #/home/
+        // Back-compat: convert old hash URLs (e.g. #/sq/menu/...) to path-based
+        if (window.location.hash && window.location.hash.startsWith('#/')) {
+            const legacy = window.location.hash.substring(2); // strip '#/'
+            history.replaceState(null, '', '/' + legacy);
+            // Trigger routing for the new path
+            window.dispatchEvent(new PopStateEvent('popstate'));
+            return;
+        }
 
-        // Default values
+        // Parse pathname like /sq/menu/pizza/pizza-margarita
+        let path = window.location.pathname;
+        if (path.endsWith('/index.html')) path = path.replace(/\/index\.html$/, '/');
+        path = path.replace(/\/+$|^\/+/, '/'); // collapse extra slashes, keep single leading
+        const parts = path.split('/').filter(Boolean);
+
+        // Defaults
         let lang = localStorage.getItem('ragazziLang') || 'sq';
         let pageKey = 'home';
         let menuKey = null;
         let itemSlug = null;
 
         if (parts.length === 0) {
-            // If there's no hash, redirect to the default URL.
-            // use 'replaceState' to avoid polluting browser history.
-            history.replaceState(null, '', `#${lang}/${pageKey}`);
+            // No path provided, route to default language home
+            history.replaceState(null, '', `/${lang}/home`);
+            // Do not recurse via popstate; just set local vars
+            pageKey = 'home';
         } else {
-            // Check if the first part of the URL is a valid language code.
             if (translations.hasOwnProperty(parts[0])) {
                 lang = parts[0];
                 pageKey = parts[1] || 'home';
@@ -267,24 +310,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     itemSlug = parts[3] || null;
                 }
             } else {
-                // If no language code, assume it's the page key.
-                pageKey = parts[0];
-                 if (pageKey === 'menu' && parts[1]) {
+                // Language omitted: /menu/...
+                pageKey = parts[0] || 'home';
+                if (pageKey === 'menu' && parts[1]) {
                     menuKey = parts[1].toUpperCase().replace(/-/g, ' ');
                     itemSlug = parts[2] || null;
                 }
             }
         }
-        
-        // --- Apply the new state based on the parsed URL ---
-        
-        // 1. Set the language (this will also update text across the page)
-        setLanguage(lang);
 
-        // 2. Switch to the correct page section (Home, Menu, or About)
+        // Apply state
+        setLanguage(lang);
         switchPage(pageKey + '-page');
 
-        // 3. If on the menu page, handle the specific category and item
         if (pageKey === 'menu') {
             const targetMenuKey = menuData.hasOwnProperty(menuKey) ? menuKey : 'PIZZA';
             switchMenuCategory(targetMenuKey);
@@ -298,11 +336,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-            // Render the final menu item view
             renderCurrentMenuItem();
         }
-        
-        // Update the page title and meta description
+
+        updateAllHrefs();
         updateTitleAndMeta();
     }
 
@@ -401,6 +438,14 @@ document.addEventListener('DOMContentLoaded', () => {
             clone.classList.toggle('active', clone.dataset.menu === newMenuKey);
         });
 
+        // Reflect category in URL when on menu page
+        const pageKey = document.querySelector('.page.active')?.id.replace('-page', '');
+        if (pageKey === 'menu') {
+            const categorySlug = slugify(newMenuKey);
+            history.replaceState(null, '', `/${currentLang}/menu/${categorySlug}`);
+            updateAllHrefs();
+        }
+
         if(pizzaDisplay) pizzaDisplay.classList.add('is-navigating');
         await new Promise(resolve => setTimeout(resolve, 400));
         renderCurrentMenuItem();
@@ -412,33 +457,30 @@ document.addEventListener('DOMContentLoaded', () => {
      * Updates all navigation links on the page to build correct URLs based on the current state.
      */
     function updateAllHrefs() {
-        const activePageKey = document.querySelector('.page.active').id.replace('-page', '');
+        const activePageKey = document.querySelector('.page.active')?.id.replace('-page', '') || 'home';
 
         // Main navigation links (Home, Menu, About)
         document.querySelectorAll('.main-nav a[data-page], .page-switcher').forEach(link => {
-            const page = link.dataset.page.replace('-page', '');
-            link.href = `#${currentLang}/${page}`;
+            const page = (link.dataset.page || '').replace('-page', '');
+            if (!page) return;
+            if (page === 'about') {
+                link.href = `about.html`;
+            } else {
+                link.href = `/${currentLang}/${page}`;
+            }
         });
 
         // Menu category links (Pizza, Burger, etc.)
         menuNavLinks.forEach(link => {
             const menu = slugify(link.dataset.menu);
-            link.href = `#${currentLang}/menu/${menu}`;
+            link.href = `/${currentLang}/menu/${menu}`;
         });
         
         // Featured item links on the homepage
         fanFavoriteLinks.forEach(link => {
             const menu = slugify(link.dataset.menuTarget);
             const item = slugify(link.dataset.itemTarget);
-            link.href = `#${currentLang}/menu/${menu}/${item}`;
-        });
-
-        // Cross-page links (e.g., about.html → index.html)
-        document.querySelectorAll('.main-nav a[href^="index.html"]').forEach(link => {
-            const langKey = link.dataset.lang;
-            if (langKey) {
-                link.href = `index.html#${currentLang}/${langKey}`;
-            }
+            link.href = `/${currentLang}/menu/${menu}/${item}`;
         });
     }
 
@@ -448,8 +490,25 @@ document.addEventListener('DOMContentLoaded', () => {
      * Sets up all the initial event listeners for the page.
      */
     function setupEventListeners() {
-        // Listener for the main router
-        window.addEventListener('hashchange', handleUrlChange);
+        // Listener for the main router (History API)
+        window.addEventListener('popstate', handleUrlChange);
+
+        // Intercept internal navigation to use pushState (smooth SPA feel)
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            const href = a.getAttribute('href');
+            if (!href || href.startsWith('http') || href.startsWith('tel:') || href.startsWith('mailto:') || href.startsWith('https://wa.me')) return;
+            if (href.startsWith('#')) return; // ignore anchors used for UI only
+            // Same-origin relative link
+            if (href.startsWith('/')) {
+                e.preventDefault();
+                history.pushState(null, '', href);
+                handleUrlChange();
+            } else if (href === 'about.html') {
+                // Allow full navigation to dedicated About page
+            }
+        });
 
         // Mobile navigation toggle
         if(mobileNavToggle) {
@@ -469,24 +528,39 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Language selection
+        // Language selection (path-based)
         if(langDropdown) {
             langDropdown.addEventListener('click', (e) => {
                 e.preventDefault();
                 const langLink = e.target.closest('a[data-lang-code]');
                 if (langLink) {
                     const newLang = langLink.dataset.langCode;
-                    const hash = window.location.hash.substring(1);
-                    const parts = hash.split('/');
-                    
-                    // Replace the language part of the current URL
-                    if (translations.hasOwnProperty(parts[0])) {
-                        parts[0] = newLang;
+                    let path = window.location.pathname;
+                    if (path.endsWith('/index.html')) path = path.replace(/\/index\.html$/, '/');
+                    path = path.replace(/\/+$|^\/+/, '/');
+                    const parts = path.split('/').filter(Boolean);
+
+                    let page = 'home', rest = [];
+                    if (parts.length === 0) {
+                        // stay on home
+                    } else if (translations.hasOwnProperty(parts[0])) {
+                        page = parts[1] || 'home';
+                        rest = parts.slice(2);
                     } else {
-                        parts.unshift(newLang);
+                        page = parts[0] || 'home';
+                        rest = parts.slice(1);
                     }
-                    
-                    window.location.hash = parts.join('/');
+
+                    const newPath = page === 'about'
+                        ? 'about.html'
+                        : `/${newLang}/${[page, ...rest].filter(Boolean).join('/')}`;
+
+                    if (newPath === 'about.html') {
+                        window.location.href = newPath;
+                    } else {
+                        history.pushState(null, '', newPath);
+                        handleUrlChange();
+                    }
                     languageSwitcher.classList.remove('open');
                 }
             });
@@ -795,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update URL to reflect the new item
         const itemSlug = slugify(menu.items[currentItemIndex].name);
         const pageKey = document.querySelector('.page.active').id.replace('-page', '');
-        history.replaceState(null, '', `#${currentLang}/${pageKey}/${slugify(activeMenuKey)}/${itemSlug}`);
+        history.replaceState(null, '', `/${currentLang}/${pageKey}/${slugify(activeMenuKey)}/${itemSlug}`);
 
         renderCurrentMenuItem();
 
