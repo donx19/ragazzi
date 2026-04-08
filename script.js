@@ -864,6 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // MODIFICATION: Added lazy loading for the hero image
     function lazyLoadHeroImage() {
+        const heroSection = document.querySelector('.hero-section, .hero');
         if (!heroSection) return;
         const highQualityImage = new Image();
         highQualityImage.src = 'https://www.pngall.com/wp-content/uploads/2017/01/Albanian-Eagle-PNG-Image.png';
@@ -893,6 +894,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             setupEventListeners();
             preloadMenuImages();
+            // Force default to Albanian on first visit with no hash
+            if (!window.location.hash) {
+                localStorage.setItem('ragazziLang', 'sq');
+                window.location.hash = 'sq/home';
+            }
             handleUrlChange();
             updateAllHrefs();
             lazyLoadHeroImage();
