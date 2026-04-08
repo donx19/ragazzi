@@ -32,6 +32,24 @@ document.addEventListener('DOMContentLoaded', () => {
     translations.mk.menu_cat_pizza_for_kids = "ПИЦА ЗА ДЕЦА";
     translations.mk.menu_cat_extras = "ЕКСТРА";
 
+    // Macedonian menu page titles (short style)
+    translations.mk.menu_pizza = "Избери Пица";
+    translations.mk.menu_baguette = "Избери Багет";
+    translations.mk.menu_pide = "Избери Пиде";
+    translations.mk.menu_portion = "Избери Порција";
+    translations.mk.menu_tosta = "Избери Тост";
+    translations.mk.menu_burger = "Избери Бургер";
+    translations.mk.menu_lahmacun = "Избери Лахмаџун";
+    translations.mk.menu_pizza_for_kids = "Избери Пица за Деца";
+    translations.mk.menu_extras = "Избери Екстра";
+
+    // Macedonian lahmacun item names
+    translations.mk.lahmacun_classic_name = "Класичен Лахмаџун";
+    translations.mk.lahmacun_kackavall_name = "Лахмаџун со Кашкавал";
+
+    // Albanian burger name fix
+    translations.sq.burger_crispy_chicken_name = "Crispy Burger";
+
     translations.mk.fcShkupiTitle = "Го поддржува омилениот тим: ФК Шкупи";
     translations.mk.fcShkupiParagraph1 = "ФК Шкупи се натпреварува во Првата македонска лига и минува низ тешка сезона, и на теренот и надвор од него. За да му помогне на клубот да остане силен во зимскиот период, Ragazzi Fastfood & Pizza, предводен од Бесар Елезии, ги спонзорираше зимските тренинг-опреми на тимот.";
     translations.mk.fcShkupiParagraph2 = "Оваа поддршка им ја обезбедува потребната опрема на фудбалерите, но испраќа и јасна порака: локалната заедница застанува зад својот клуб. Како што вели Бесар, секој што живее во градот треба да го поддржи својот тим. Неговиот придонес не е само финансиска помош, туку и знак на вера, мотивација и единство за ФК Шкупи, стручниот штаб и верните навивачи.";
@@ -584,10 +602,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Measure and inject CSS animation
-        const originalWidth = chips.reduce((sum, chip) => {
-            return sum + chip.offsetWidth + 12; // 12 = gap (0.75rem)
-        }, 0);
+        // Measure exact width by finding position of first clone
+        const firstClone = track.querySelector('.cloned-chip');
+        const originalWidth = firstClone.offsetLeft;
         const duration = originalWidth / 20; // 20px/sec — gentle pace
 
         const style = document.createElement('style');
