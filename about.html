@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Learn more about Ragazzi Fastfood & Pizza, the story of founder Besar Elezi, and how Ragazzi supports the local community and FC Shkupi.">
     <title>RAGAZZI FASTFOOD & PIZZA - About Us</title>
+    
+    <!-- Canonical + Open Graph + Twitter Card for About page -->
+    <link rel="canonical" href="https://pizzeriaragazziskopje.com/about.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pizzeriaragazziskopje.com/about.html">
+    <meta property="og:title" content="About Ragazzi Fastfood & Pizza | Our Story">
+    <meta property="og:description" content="Meet the team behind Ragazzi Fastfood & Pizza and discover our story and community support.">
+    <meta property="og:image" content="https://i.imgur.com/xi0bh5e.png">
+    <meta property="og:image:alt" content="Ragazzi Fastfood & Pizza - Our Story">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Ragazzi Fastfood & Pizza | Our Story">
+    <meta name="twitter:description" content="Meet the team behind Ragazzi Fastfood & Pizza and discover our story and community support.">
+    <meta name="twitter:image" content="https://i.imgur.com/xi0bh5e.png">
 
     <!-- Google Fonts and Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +27,21 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- JSON-LD: Organization for About page -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ragazzi Fastfood & Pizza",
+      "url": "https://pizzeriaragazziskopje.com/about.html",
+      "logo": "https://pizzeriaragazziskopje.com/logo.png",
+      "sameAs": [
+        "https://www.instagram.com/ragazzipizzafastfood",
+        "https://g.co/kgs/qPfLJbe"
+      ]
+    }
+    </script>
 
     <!-- === FAVICON & APP ICONS === -->
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
@@ -29,9 +57,9 @@
         <div class="container">
             <div class="logo">RAGAZZI<br><span>FASTFOOD &amp; PIZZA</span></div>
             <nav class="main-nav">
-                <a href="index.html#home" data-lang="home">Home</a>
-                <a href="index.html#menu" data-lang="menu">Menu</a>
-                <a href="#about" class="active" data-page="about-page" data-lang="about">About Us</a>
+                <a href="/sq/home" data-page="home-page" data-lang="home">Home</a>
+                <a href="/sq/menu" data-page="menu-page" data-lang="menu">Menu</a>
+                <a href="about.html" class="active" data-page="about-page" data-lang="about">About Us</a>
             </nav>
             <div class="header-actions">
                 <div class="language-switcher">
@@ -146,12 +174,6 @@
         </div>
     </footer>
 
-    <script>
-        if (!window.location.hash) {
-            var savedLang = localStorage.getItem('ragazziLang') || 'sq';
-            window.location.hash = '#' + savedLang + '/about';
-        }
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
